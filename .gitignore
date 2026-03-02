@@ -1,4 +1,6 @@
 # Root .gitignore
+.vscode
+.DS_Store
 
 ###> symfony/framework-bundle ###
 /.env.local
