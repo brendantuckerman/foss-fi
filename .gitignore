@@ -6,6 +6,8 @@
 api/.env.local
 api/.env.local.php
 api/.env.*.local
+.evv
+api/.env*
 api/config/secrets/prod/prod.decrypt.private.php
 api/public/bundles/
 api/var/

@@ -4,11 +4,12 @@ An open source FI/FIRE/Coast Fire calculator, built as a SPA
 
 Author: Brendan Tuckerman
 
-Github: [repo()]
+Github: [repo(git@github.com:brendantuckerman/foss-fi.git)]
 
 ## Tech Stack
 
 Front end - Vue.js
+Back end - Symfony
 
 ## Project structure
 
