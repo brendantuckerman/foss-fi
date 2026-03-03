@@ -50,3 +50,23 @@ APP:
 cd foss-fi/
 npm run dev
 ```
+
+## Commands
+
+### Symfony and symfony console
+
+Make your life easier and add these to your .zshrc:
+
+```zsh
+alias sc="docker compose --project-directory ~/Projects/foss-fi exec php bin/console"
+
+alias sy="docker compose --project-directory ~/Projects/foss-fi exec php"
+
+```
+
+Then you can use symfony console from root as `sc` and the php container with `sy`, e.g.:
+
+```zsh
+  sy composer require some/package  # Composer
+  sy php bin/phpunit                # PHPUnit
+```

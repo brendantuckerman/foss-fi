@@ -1,3 +1,4 @@
+# Starts both the API dev server and the APP dev server
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "Starting Symfony api server"
