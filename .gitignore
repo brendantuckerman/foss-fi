@@ -3,23 +3,23 @@
 .DS_Store
 
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
+api/.env.local
+api/.env.local.php
+api/.env.*.local
+api/config/secrets/prod/prod.decrypt.private.php
+api/public/bundles/
+api/var/
+api/vendor/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
-/phpunit.xml
-/.phpunit.cache/
+api/phpunit.xml
+api/.phpunit.cache/
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
+api/public/assets/
+api/assets/vendor/
 ###< symfony/asset-mapper ###
 
 # Logs
