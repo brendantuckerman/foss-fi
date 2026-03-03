@@ -23,5 +23,30 @@ Back end - Symfony
 │ ├── src/
 │ ├── package.json
 │ └── ...
-├── docker-compose.yml
+├── compose.yaml
 └── README.MD <- You are here
+
+## To build
+
+API:
+
+````bash
+cd foss-fi/
+docker compose build
+```
+
+## To run
+
+API:
+
+```bash
+cd foss-fi/
+docker compose up -d
+````
+
+APP:
+
+```bash
+cd foss-fi/
+npm run dev
+```

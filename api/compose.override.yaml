@@ -1,12 +1,14 @@
-
+# Thi project has moved the compose to the root.
+# Running docker compose from this /api folder will result in
+# issues.
 services:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database:
     ports:
       - "5432"
-###< doctrine/doctrine-bundle ###
+  ###< doctrine/doctrine-bundle ###
 
-###> symfony/mailer ###
+  ###> symfony/mailer ###
   mailer:
     image: axllent/mailpit
     ports:
