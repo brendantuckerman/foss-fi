@@ -94,3 +94,9 @@ To access the psql command line
 ```zsh
 docker-compose exec database psql app app
 ```
+
+For NSERTION etc
+
+```zsh
+docker-compose exec database psql -U app -d app -c "INSERT INTO..."
+```
