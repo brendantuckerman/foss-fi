@@ -86,3 +86,11 @@ Then you can use symfony console from root as `sc` and the php container with `s
   sy composer require some/package  # Composer
   sy php bin/phpunit                # PHPUnit
 ```
+
+### PSQL Dev
+
+To access the psql command line
+
+```zsh
+docker-compose exec database psql app app
+```
