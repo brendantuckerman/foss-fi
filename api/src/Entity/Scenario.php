@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScenarioRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Scenario
 {
     #[ORM\Id]
@@ -115,6 +116,12 @@ class Scenario
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
