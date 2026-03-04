@@ -26,6 +26,22 @@ Back end - Symfony
 ├── compose.yaml
 └── README.MD <- You are here
 
+## Starting the project
+
+To start from scratch (build and install npm packages)
+
+```bash
+cd foss-fi/
+./coldstart.sh
+```
+
+To start everything:
+
+```bash
+cd foss-fi/
+./pullstart.sh
+```
+
 ## To build
 
 API:
