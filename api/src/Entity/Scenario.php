@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ScenarioRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ScenarioRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,12 +17,15 @@ class Scenario
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $label = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?int $income = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
     private ?int $outgoings = null;
 
     #[ORM\Column(nullable: true)]
