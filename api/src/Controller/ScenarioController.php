@@ -30,11 +30,19 @@ final class ScenarioController extends AbstractController
         $scenario = new Scenario();
         $form = $this->createForm(ScenarioType::class, $scenario);
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($scenario);
+            $this->entityManager->flush();
+
+            // Go back to the page
+            return $this->redirectToRoute('home');
+        }
 
         return $this->render('scenario/index.html.twig', [
             'controller_name' => 'ScenarioController',
             'Leftover' => $leftOver,
             'scenario_form' => $form,
+
         ]);
     }
 }
