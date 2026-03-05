@@ -9,8 +9,8 @@ final class ScenarioControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/scenario');
+        $client->request('GET', '/');
 
-        self::assertResponseIsSuccessful();
+        $this->assertResponseIsSuccessful();
     }
 }
