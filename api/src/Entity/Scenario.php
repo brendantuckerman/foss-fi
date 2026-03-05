@@ -2,13 +2,25 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ScenarioRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ScenarioRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'scenario:item']),
+        new GetCollection(normalizationContext: ['groups' => 'scenario:list'])
+    ],
+    order: ['label' => 'DESC', 'createdAt' => 'DESC'],
+    paginationEnabled: true
+)]
 class Scenario
 {
     #[ORM\Id]
@@ -18,26 +30,33 @@ class Scenario
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NotBlank]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?string $label = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?int $income = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?int $outgoings = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?int $fiTarget = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?int $investmentAmount = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?string $returnRate = null;
 
     #[ORM\Column]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
