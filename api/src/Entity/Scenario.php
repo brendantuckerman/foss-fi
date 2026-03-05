@@ -36,28 +36,69 @@ class Scenario
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank]
     #[Groups(['scenario:list', 'scenario:item'])]
+    #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
     private ?int $income = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank]
     #[Groups(['scenario:list', 'scenario:item'])]
+     #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
     private ?int $outgoings = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['scenario:list', 'scenario:item'])]
+     #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
     private ?int $fiTarget = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['scenario:list', 'scenario:item'])]
+     #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
     private ?int $investmentAmount = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
     #[Groups(['scenario:list', 'scenario:item'])]
+    #[Assert\Range(
+        min: 0.0,
+        max: 100.00,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
     private ?string $returnRate = null;
 
     #[ORM\Column]
     #[Groups(['scenario:list', 'scenario:item'])]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $age = null;
+     #[Assert\Range(
+        min: 0,
+        max: 120,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
+    private ?int $super = null;
 
     public function getId(): ?int
     {
@@ -150,6 +191,30 @@ class Scenario
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(?int $age): static
+    {
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function getSuper(): ?int
+    {
+        return $this->super;
+    }
+
+    public function setSuper(?int $super): static
+    {
+        $this->super = $super;
 
         return $this;
     }
