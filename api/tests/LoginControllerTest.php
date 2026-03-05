@@ -29,7 +29,7 @@ class LoginControllerTest extends WebTestCase
         /** @var UserPasswordHasherInterface $passwordHasher */
         $passwordHasher = $container->get('security.user_password_hasher');
 
-        $user = (new Admin())->setEmail('email@example.com');
+        $user = (new Admin())->setUsername('thisShouldWork');
         $user->setPassword($passwordHasher->hashPassword($user, 'password'));
 
         $em->persist($user);
@@ -43,7 +43,7 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'doesNotExist@example.com',
+            '_username' => 'doesNotExist',
             '_password' => 'password',
         ]);
 
@@ -58,7 +58,7 @@ class LoginControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'thisShouldWork',
             '_password' => 'bad-password',
         ]);
 
@@ -70,7 +70,7 @@ class LoginControllerTest extends WebTestCase
 
         // Success - Login with valid credentials is allowed.
         $this->client->submitForm('Sign in', [
-            '_username' => 'email@example.com',
+            '_username' => 'thisShouldWork',
             '_password' => 'password',
         ]);
 

@@ -100,3 +100,37 @@ For NSERTION etc
 ```zsh
 docker-compose exec database psql -U app -d app -c "INSERT INTO..."
 ```
+
+## Tests
+
+Running tests should be done in the test environment.
+
+The easiest way is via
+
+```bash
+make tests
+```
+
+If not already done, a DB should be created for that env:
+
+```bash
+sc doctrine:database:create --env=test
+```
+
+And then migrations added to that db:
+
+```bash
+sc doctrine:migrations:migrate -n --env=test
+```
+
+Always a good idea to clear the cache:
+
+```bash
+sc c:c --env==test
+```
+
+And tests can be run with
+
+```bash
+ sy php bin/phpunit
+```
