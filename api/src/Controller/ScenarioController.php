@@ -31,6 +31,8 @@ final class ScenarioController extends AbstractController
         $form = $this->createForm(ScenarioType::class, $scenario);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO: In future, we only want to do this if a user
+            // is logged in
             $this->entityManager->persist($scenario);
             $this->entityManager->flush();
 

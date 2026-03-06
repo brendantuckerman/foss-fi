@@ -53,4 +53,33 @@ class ProjectionCalculatorTest extends TestCase
         $result_1 = $calculator->calculateAnnualInterest($investment_1, $interestRate_1);
         $this->assertSame(50, $result_1);
     }
+
+    public function testPresentValue(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero interest rate: PV = pmt * nper = 100 * 12 = 1200
+        $result_1 = $calculator->calculatePresentValue(0.0, 12, -100);
+        $this->assertEqualsWithDelta(1200.0, $result_1, 0.01);
+
+        // Single period, future value only: PV = -fv / (1 + rate) = -1100 / 1.1 = -1000
+        $result_2 = $calculator->calculatePresentValue(0.1, 1, 0, 1100);
+        $this->assertEqualsWithDelta(-1000.0, $result_2, 0.01);
+    }
+
+
+    public function testCalculatePreservationAge(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->calculatePreservationAge(35);
+        $this->assertSame($result_1, 60);
+
+        // These tests will fail after 2026
+        $result_2 = $calculator->calculatePreservationAge(69);
+        $this->assertSame($result_2, 55);
+
+        $result_3 = $calculator->calculatePreservationAge(64);
+        $this->assertSame($result_3, 57);
+    }
 }

@@ -14,6 +14,8 @@ class ScenarioType extends AbstractType
     {
         $builder
             ->add('label')
+            ->add('age')
+            ->add('super')
             ->add('income')
             ->add('outgoings')
             ->add('fiTarget')

@@ -100,6 +100,15 @@ class Scenario
     )]
     private ?int $super = null;
 
+     #[ORM\Column(nullable: true)]
+     private ?int $currentNetWorth = null;
+
+     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+     private ?string $superGuarantee = null;
+
+     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+     private ?string $inflationRate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -215,6 +224,42 @@ class Scenario
     public function setSuper(?int $super): static
     {
         $this->super = $super;
+
+        return $this;
+    }
+
+    public function getCurrentNetWorth(): ?int
+    {
+        return $this->currentNetWorth;
+    }
+
+    public function setCurrentNetWorth(?int $currentNetWorth): static
+    {
+        $this->currentNetWorth = $currentNetWorth;
+
+        return $this;
+    }
+
+    public function getSuperGuarantee(): ?string
+    {
+        return $this->superGuarantee;
+    }
+
+    public function setSuperGuarantee(?string $superGuarantee): static
+    {
+        $this->superGuarantee = $superGuarantee;
+
+        return $this;
+    }
+
+    public function getInflationRate(): ?string
+    {
+        return $this->inflationRate;
+    }
+
+    public function setInflationRate(?string $inflationRate): static
+    {
+        $this->inflationRate = $inflationRate;
 
         return $this;
     }
