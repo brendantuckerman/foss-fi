@@ -1,52 +1,82 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* Dashboard palette — charcoal/grey base with subtle accent colours */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* Neutrals */
+  --c-white: #ffffff;
+  --c-grey-50: #f6f7f8;
+  --c-grey-100: #edeef0;
+  --c-grey-200: #d8dadd;
+  --c-grey-300: #b0b4ba;
+  --c-grey-400: #878d96;
+  --c-grey-500: #5f6470;
+  --c-grey-600: #444954;
+  --c-grey-700: #30343d;
+  --c-grey-800: #1f2229;
+  --c-grey-900: #13151a;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Accents — muted, suitable for charts and highlights */
+  --c-blue: #4a7fa5; /* primary action / selected state */
+  --c-blue-soft: #dce8f0;
+  --c-teal: #3a8a82; /* positive / growth */
+  --c-teal-soft: #d4ecea;
+  --c-amber: #c08a3a; /* warning / caution */
+  --c-amber-soft: #f5e9d4;
+  --c-rose: #a84f55; /* negative / deficit */
+  --c-rose-soft: #f0dede;
+  --c-violet: #6a5fa8; /* secondary data series */
+  --c-violet-soft: #e3e1f4;
 
-  --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* Graph series — ordered for multi-series charts */
+  --c-chart-1: var(--c-blue);
+  --c-chart-2: var(--c-teal);
+  --c-chart-3: var(--c-amber);
+  --c-chart-4: var(--c-rose);
+  --c-chart-5: var(--c-violet);
 }
 
-/* semantic color variables for this project */
+/* Semantic tokens — light mode */
 :root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: var(--c-white);
+  --color-background-soft: var(--c-grey-50);
+  --color-background-mute: var(--c-grey-100);
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: var(--c-grey-200);
+  --color-border-hover: var(--c-grey-300);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: var(--c-grey-800);
+  --color-text: var(--c-grey-700);
+  --color-text-muted: var(--c-grey-400);
 
-  --section-gap: 160px;
+  --color-accent: var(--c-blue);
+  --color-accent-soft: var(--c-blue-soft);
+
+  --color-positive: var(--c-teal);
+  --color-positive-soft: var(--c-teal-soft);
+  --color-negative: var(--c-rose);
+  --color-negative-soft: var(--c-rose-soft);
+  --color-warning: var(--c-amber);
+  --color-warning-soft: var(--c-amber-soft);
+
+  --color-widget-bg: var(--c-white);
+  --color-widget-border: var(--c-grey-200);
+
+  --section-gap: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+    --color-background: var(--c-grey-900);
+    --color-background-soft: var(--c-grey-800);
+    --color-background-mute: var(--c-grey-700);
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-hover: rgba(255, 255, 255, 0.16);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
+    --color-heading: var(--c-grey-50);
+    --color-text: var(--c-grey-300);
+    --color-text-muted: var(--c-grey-500);
+
+    --color-widget-bg: var(--c-grey-800);
+    --color-widget-border: rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -61,7 +91,7 @@
 body {
   min-height: 100vh;
   color: var(--color-text);
-  background: var(--color-background);
+  background: var(--color-background-soft);
   transition:
     color 0.5s,
     background-color 0.5s;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
 </script>
 
 <template>
@@ -11,19 +12,20 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </div>
   </header>
-
-  <RouterView />
+  <main>
+    <section class="foss-fi-sidebar__section">
+      <SidebarWrapper />
+    </section>
+    <body>
+      <RouterView />
+    </body>
+  </main>
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
 }
 
 nav {
@@ -49,6 +51,18 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+main {
+  position: relative;
+}
+
+.foss-fi-sidebar__section {
+  background-color: var(--color-background-mute);
+  height: 100vh;
+  position: absolute;
+  width: 90vw;
+  left: -100vw;
 }
 
 @media (min-width: 1024px) {
