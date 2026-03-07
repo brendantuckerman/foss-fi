@@ -1,6 +1,13 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>About</h1>
+    <h2>What is FIRE?</h2>
+    <p>
+      There is a pretty good summary
+      <a href="www.investopedia.com/terms/f/financial-independence-retire-early-fire.asp"
+        >on this investopedia page.</a
+      >
+    </p>
   </div>
 </template>
 

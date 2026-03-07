@@ -3,14 +3,41 @@ import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
 import { Icon } from '@iconify/vue'
+import ColorMode from './components/ColorMode.vue'
+
+import { useWindowSize } from '@vueuse/core'
+import DisclaimerBanner from './components/disclaimerBanner.vue'
+import IconBranding from './components/icons/IconBranding.vue'
+
+const { width } = useWindowSize()
 const toggleState = ref(false)
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
+    <div class="wrapper pl-8 pr-8">
+      <div class="foss-fi-header__utilities-wrapper w-full text-right">
+        <a href="/">Log in or Sign up</a>
+        <ColorMode />
+      </div>
+      <div class="foss-fi-header__branding text-center flex flex-col gap-2">
+        <div class="flex gap-2 justify-center items-center">
+          <IconBranding />
+          <h1 class="text-3xl font-bold text-center">FIRE Calculator</h1>
+        </div>
+        <p class="text-sm">
+          A <span class="italic">Financial Independence Retire Early </span> calculator for the
+          Australian context.
+        </p>
+        <p v-if="width < 860" class="text-sm flex">
+          <Icon icon="material-symbols:right-click" width="24" height="24" />Click the tab on the
+          left to enter details.
+        </p>
+        <p v-else class="text-sm">Use the panel to the left to enter details.</p>
+      </div>
+
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/">Dashboard</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
@@ -43,6 +70,7 @@ const toggleState = ref(false)
       <RouterView />
     </body>
   </main>
+  <DisclaimerBanner />
 </template>
 
 <style scoped>

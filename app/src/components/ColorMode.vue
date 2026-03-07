@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 // Pass { disableTransition: false } to enable transitions
-const mode = useColorMode()
+const mode = useColorMode({ disableTransition: false })
 </script>
 
 <template>
