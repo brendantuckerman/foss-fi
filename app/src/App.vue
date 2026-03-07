@@ -37,8 +37,8 @@ const toggleState = ref(false)
       </div>
 
       <nav>
-        <RouterLink to="/">Dashboard</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/" class="hover:cursor-pointer">Dashboard</RouterLink>
+        <RouterLink to="/about" class="hover:cursor-pointer">About</RouterLink>
       </nav>
     </div>
   </header>
@@ -66,7 +66,7 @@ const toggleState = ref(false)
       </div>
       <SidebarWrapper />
     </section>
-    <body>
+    <body class="foss-fi-dashboard border-1 p-2">
       <RouterView />
     </body>
   </main>
@@ -130,13 +130,13 @@ main {
 }
 
 .foss-fi-sidebar__section.sidebar-open .foss-fi-sidebar__toggle {
-  right: 0;
-  top: 0;
+  right: 0.25rem;
+  top: 0.25rem;
+  box-shadow: none;
 }
 
 .foss-fi-sidebar__section.sidebar-open {
   left: 0;
-  box-shadow: var(--shadow-elevation-medium);
 }
 
 /* Closed Section and toggle */
@@ -145,7 +145,7 @@ main {
 }
 
 .foss-fi-sidebar__section.sidebar-closed .foss-fi-sidebar__toggle {
-  top: 35%;
+  top: 15%;
   right: -40px;
   height: 25%;
   width: 40px;
@@ -163,6 +163,10 @@ main {
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
+}
+
+.foss-fi-sidebar__section.sidebar-open .foss-fi-sidebar__toggle .foss-fi-sidebar__toggle-span {
+  box-shadow: none;
 }
 
 @media (min-width: 1024px) {
