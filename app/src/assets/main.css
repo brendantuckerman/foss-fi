@@ -1,6 +1,7 @@
 @import './base.css';
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@source "../../formkit.theme.ts";
 
 @custom-variant dark (&:is(.dark *));
 
