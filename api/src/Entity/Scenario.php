@@ -85,6 +85,7 @@ class Scenario
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['scenario:list', 'scenario:item'])]
     private ?int $age = null;
      #[Assert\Range(
         min: 0,
@@ -93,6 +94,7 @@ class Scenario
     )]
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['scenario:list', 'scenario:item'])]
     #[Assert\Range(
         min: 0,
         max: 10000000,
@@ -101,12 +103,15 @@ class Scenario
     private ?int $super = null;
 
      #[ORM\Column(nullable: true)]
+     #[Groups(['scenario:list', 'scenario:item'])]
      private ?int $currentNetWorth = null;
 
      #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
+     #[Groups(['scenario:list', 'scenario:item'])]
      private ?string $superGuarantee = null;
 
      #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+     #[Groups(['scenario:list', 'scenario:item'])]
      private ?string $inflationRate = null;
 
     public function getId(): ?int

@@ -6,7 +6,7 @@ import { Icon } from '@iconify/vue'
 import ColorMode from './components/ColorMode.vue'
 
 import { useWindowSize } from '@vueuse/core'
-import DisclaimerBanner from './components/disclaimerBanner.vue'
+import DisclaimerBanner from './components/DisclaimerBanner.vue'
 import IconBranding from './components/icons/IconBranding.vue'
 
 const { width } = useWindowSize()
@@ -114,6 +114,7 @@ main {
   position: absolute;
   width: 90vw;
   transition: left 0.3s ease;
+  padding-bottom: 4rem;
 }
 
 .foss-fi-sidebar__toggle {
@@ -137,6 +138,7 @@ main {
 
 .foss-fi-sidebar__section.sidebar-open {
   left: 0;
+  overflow: scroll;
 }
 
 /* Closed Section and toggle */
