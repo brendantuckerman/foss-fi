@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
-
+import { Icon } from '@iconify/vue'
 const toggleState = ref(false)
 </script>
 
@@ -29,7 +29,13 @@ const toggleState = ref(false)
         id="sidebar-toggle"
         @click="toggleState = !toggleState"
       >
-        <span class="foss-fi-sidebar__toggle-span">Toggle state is {{ toggleState }}</span>
+        <span v-if="!toggleState" class="foss-fi-sidebar__toggle-span"
+          ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />Adjust
+          values
+        </span>
+        <span v-else class="foss-fi-sidebar__toggle-span"
+          ><Icon icon="material-symbols:close-rounded" width="24" height="24" />
+        </span>
       </div>
       <SidebarWrapper />
     </section>
@@ -84,13 +90,17 @@ main {
 
 .foss-fi-sidebar__toggle {
   position: absolute;
-  border: 1px solid salmon;
   box-shadow: var(--shadow-elevation-low);
   background-color: var(--color-background-mute);
 }
 
 /* Open  Section and toggle*/
 /* Position toggle to allow close */
+.foss-fi-sidebar__toggle span:hover {
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
 .foss-fi-sidebar__section.sidebar-open .foss-fi-sidebar__toggle {
   right: 0;
   top: 0;
@@ -98,7 +108,7 @@ main {
 
 .foss-fi-sidebar__section.sidebar-open {
   left: 0;
-  box-shadow: var(--shadow-elevation-low);
+  box-shadow: var(--shadow-elevation-medium);
 }
 
 /* Closed Section and toggle */
@@ -121,6 +131,10 @@ main {
 .foss-fi-sidebar__section.sidebar-closed .foss-fi-sidebar__toggle .foss-fi-sidebar__toggle-span {
   white-space: nowrap;
   transform: rotate(90deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 @media (min-width: 1024px) {

@@ -10,6 +10,5 @@ import ScenarioForm from './ScenarioForm.vue'
 
 <style scoped>
 .foss-fi-dashboard-sb__wrapper {
-  border: 2px solid red;
 }
 </style>
