@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
+
+const toggleState = ref(false)
 </script>
 
 <template>
@@ -13,7 +16,21 @@ import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
     </div>
   </header>
   <main>
-    <section class="foss-fi-sidebar__section">
+    <section
+      :class="
+        toggleState
+          ? 'foss-fi-sidebar__section sidebar-open'
+          : 'foss-fi-sidebar__section sidebar-closed'
+      "
+    >
+      <div
+        role="button"
+        class="foss-fi-sidebar__toggle"
+        id="sidebar-toggle"
+        @click="toggleState = !toggleState"
+      >
+        <span class="foss-fi-sidebar__toggle-span">Toggle state is {{ toggleState }}</span>
+      </div>
       <SidebarWrapper />
     </section>
     <body>
@@ -62,7 +79,48 @@ main {
   height: 100vh;
   position: absolute;
   width: 90vw;
-  left: -100vw;
+  transition: left 0.3s ease;
+}
+
+.foss-fi-sidebar__toggle {
+  position: absolute;
+  border: 1px solid salmon;
+  box-shadow: var(--shadow-elevation-low);
+  background-color: var(--color-background-mute);
+}
+
+/* Open  Section and toggle*/
+/* Position toggle to allow close */
+.foss-fi-sidebar__section.sidebar-open .foss-fi-sidebar__toggle {
+  right: 0;
+  top: 0;
+}
+
+.foss-fi-sidebar__section.sidebar-open {
+  left: 0;
+  box-shadow: var(--shadow-elevation-low);
+}
+
+/* Closed Section and toggle */
+.foss-fi-sidebar__section.sidebar-closed {
+  left: -90vw;
+}
+
+.foss-fi-sidebar__section.sidebar-closed .foss-fi-sidebar__toggle {
+  top: 35%;
+  right: -40px;
+  height: 25%;
+  width: 40px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foss-fi-sidebar__section.sidebar-closed .foss-fi-sidebar__toggle .foss-fi-sidebar__toggle-span {
+  white-space: nowrap;
+  transform: rotate(90deg);
 }
 
 @media (min-width: 1024px) {
