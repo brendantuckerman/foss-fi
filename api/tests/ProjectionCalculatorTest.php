@@ -65,8 +65,30 @@ class ProjectionCalculatorTest extends TestCase
         // Single period, future value only: PV = -fv / (1 + rate) = -1100 / 1.1 = -1000
         $result_2 = $calculator->calculatePresentValue(0.1, 1, 0, 1100);
         $this->assertEqualsWithDelta(-1000.0, $result_2, 0.01);
+
+        // 10% rate, 10 periods, $100k/period: PV = 100000 * (1 - 1.1^-10) / 0.1 ≈ 614,456.71
+        $result_3 = $calculator->calculatePresentValue(0.1, 10, -100000);
+        $this->assertGreaterThan(600000.0, $result_3);
+        $this->assertEqualsWithDelta(614456.71, $result_3, 0.01);
     }
 
+
+    public function testFutureValue(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero interest rate: FV = -(pmt * nper + pv) = -(-100 * 12 + 0) = 1200
+        $result_1 = $calculator->calculateFutureValue(0.0, 12, -100);
+        $this->assertEqualsWithDelta(1200.0, $result_1, 0.01);
+
+        // Standard: FV(0.005, 240, -500, 0) ≈ 231,020.45 (20yr monthly @6%pa, $500/mo)
+        $result_2 = $calculator->calculateFutureValue(0.005, 240, -500);
+        $this->assertEqualsWithDelta(231020.45, $result_2, 0.01);
+
+        // With existing balance: FV(0.005, 240, -500, -50000) ≈ 396,530.67
+        $result_3 = $calculator->calculateFutureValue(0.005, 240, -500, -50000);
+        $this->assertEqualsWithDelta(396530.67, $result_3, 0.01);
+    }
 
     public function testCalculatePreservationAge(): void
     {
@@ -82,4 +104,107 @@ class ProjectionCalculatorTest extends TestCase
         $result_3 = $calculator->calculatePreservationAge(64);
         $this->assertSame($result_3, 57);
     }
+
+    public function testCalculateYearsToPreservation(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->calculateYearsToPreservation(50);
+        $this->assertSame($result_1, 10);
+
+        // Negative result
+        $result_2 = $calculator->calculateYearsToPreservation(80);
+        $this->assertSame($result_2, -25);
+    }
+
+    public function testCalculatePreservationYear(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Test only valid 2026
+        $result_1 = $calculator->calculatePreservationYear(50);
+        $this->assertSame($result_1, 2036);
+
+    }
+
+    public function testCalculateInflationAdjustedGrowthRate(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->calculateInflationAdjustedGrowthRate(8.00, 3.00);
+        $this->assertSame($result_1, 5.0);
+
+        // Negative growth
+        $result_2 = $calculator->calculateInflationAdjustedGrowthRate(3.00, 5.00);
+        $this->assertSame($result_2, -2.0);
+
+    }
+
+    public function testCalculateMonthlyExpenses(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->calculateMonthlyExpenses(60000);
+        $this->assertSame($result_1, 5000);
+    }
+
+    // Note the cast to int in this function will round down
+     public function testCalculatePreSuperSavings(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->calculatePreSuperSavings(500000, 614456.71);
+        $this->assertSame($result_1, 114456);
+
+        $pv_result2 = $calculator->calculatePresentValue(0.1, 10, -100000);
+        $result_2 =$calculator->calculatePreSuperSavings(500000, $pv_result2);
+        $this->assertSame($result_2, 114456);
+    }
+
+     public function testCalculateNper(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero rate: nper = -(pv + fv) / pmt = -(1000 + 0) / -100 = 10
+        $result_1 = $calculator->calculateNper(0.0, -100.0, 1000.0);
+        $this->assertEqualsWithDelta(10.0, $result_1, 0.01);
+
+        // Standard rate: NPER(0.1, -200, 1000) = log(2) / log(1.1) ≈ 7.27
+        $result_2 = $calculator->calculateNper(0.1, -200.0, 1000.0);
+        $this->assertEqualsWithDelta(7.27, $result_2, 0.01);
+
+        // Payment too small to cover interest — must throw
+        $this->expectException(\InvalidArgumentException::class);
+        $calculator->calculateNper(0.1, -50.0, 1000.0);
+    }
+
+    public function testCalculateDifferenceTillPreSuper(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Straight up test - no dependencies
+        $result_1 = $calculator->calculateDifferenceTillPreSuper(9.15, 15);
+        $this->assertSame($result_1, 6);
+
+        // Test with dependencies
+        $nper_result2 = $calculator->calculateNper(0.1, -200.0, 1000.0); //7.27
+        $years_result2 = $calculator->calculateYearsToPreservation(50); //10
+        $result_2 = $calculator->calculateDifferenceTillPreSuper($nper_result2, $years_result2);
+         $this->assertSame($result_2, 3);
+    }
+
+    public function testCalculateRequiredSuper(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Default
+        $result_1 = $calculator->calculateRequiredSuper(85000);
+        $this->assertSame($result_1, 2125000);
+
+        // Different drwa down rate
+        $result_2 =  $calculator->calculateRequiredSuper(65000, 0.05);
+        $this->assertSame($result_2, 1300000);
+    }
 }
+
+
