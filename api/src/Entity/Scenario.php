@@ -86,12 +86,12 @@ class Scenario
 
     #[ORM\Column(nullable: true)]
     #[Groups(['scenario:list', 'scenario:item'])]
+    #[Assert\Range(
+       min: 0,
+       max: 120,
+       notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+   )]
     private ?int $age = null;
-     #[Assert\Range(
-        min: 0,
-        max: 120,
-        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
-    )]
 
     #[ORM\Column(nullable: true)]
     #[Groups(['scenario:list', 'scenario:item'])]
@@ -101,10 +101,6 @@ class Scenario
         notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
     )]
     private ?int $super = null;
-
-     #[ORM\Column(nullable: true)]
-     #[Groups(['scenario:list', 'scenario:item'])]
-     private ?int $currentNetWorth = null;
 
      #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
      #[Groups(['scenario:list', 'scenario:item'])]
@@ -233,17 +229,6 @@ class Scenario
         return $this;
     }
 
-    public function getCurrentNetWorth(): ?int
-    {
-        return $this->currentNetWorth;
-    }
-
-    public function setCurrentNetWorth(?int $currentNetWorth): static
-    {
-        $this->currentNetWorth = $currentNetWorth;
-
-        return $this;
-    }
 
     public function getSuperGuarantee(): ?string
     {

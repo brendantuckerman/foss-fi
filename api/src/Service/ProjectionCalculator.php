@@ -64,10 +64,10 @@ class ProjectionCalculator
 
         $factor = (1 + $rate) ** -$nper;
 
-        return -(
+        return round(-(
             $pmt * (1 + $rate * $type) * (1 - $factor) / $rate
             + $fv * $factor
-        );
+        ), 2);
     }
 
     /**
@@ -97,9 +97,109 @@ class ProjectionCalculator
             $pmt * (1 + $rate * $type) * ($factor - 1) / $rate
             + $pv * $factor
         );
-
-
     }
+
+    /**
+     * Calculates the fixed periodic payment for a loan or annuity (equivalent
+     * to Excel's PMT function). Use this to determine the regular payment amount
+     * needed to repay a loan or reach a savings target within a fixed number of
+     * periods — for example, calculating the monthly repayment on a mortgage or
+     * the contribution needed to reach a retirement savings goal.
+     *
+     * @param float $rate  Periodic interest rate (e.g. 0.005 for 0.5%/month).
+     * @param int   $nper  Total number of payment periods.
+     * @param float $pv    Present value / initial balance.
+     * @param float $fv    Future value remaining after the last payment (default 0).
+     * @param int   $type  0 = payments at end of period, 1 = start of period.
+     *
+     * @return float Payment per period (negative indicates money paid out).
+     */
+    public function calculatePayment(float $rate, int $nper, float $pv, float $fv = 0.0, int $type = 0): float
+    {
+        if ($rate === 0.0) {
+            return round(-($pv + $fv) / $nper, 2);
+        }
+
+        $factor = (1 + $rate) ** $nper;
+
+        return round(
+            -(($pv * $factor + $fv) * $rate) / (($factor - 1) * (1 + $rate * $type)),
+            2
+        );
+    }
+
+    /**
+     * Calculates the interest portion of a payment for a specific period
+     * (equivalent to Excel's IPMT function). Use this to determine how much
+     * of a given payment goes towards interest — useful for tracking loan
+     * amortisation or understanding the interest cost at each stage of repayment.
+     *
+     * For annuity-due (type=1), period 1 returns 0 because the first payment
+     * is made immediately with no prior interest accrual.
+     *
+     * @param float $rate  Periodic interest rate (e.g. 0.005 for 0.5%/month).
+     * @param int   $per   The period for which to calculate interest (1-indexed).
+     * @param int   $nper  Total number of payment periods.
+     * @param float $pv    Present value / initial balance.
+     * @param float $fv    Future value remaining after the last payment (default 0).
+     * @param int   $type  0 = payments at end of period, 1 = start of period.
+     *
+     * @return float Interest portion of the payment (negative indicates money paid out).
+     */
+    public function calculateInterestPayment(float $rate, int $per, int $nper, float $pv, float $fv = 0.0, int $type = 0): float
+    {
+        if ($rate === 0.0) {
+            return 0.0;
+        }
+
+        if ($type === 1 && $per === 1) {
+            return 0.0;
+        }
+
+        $pmt = $this->calculatePayment($rate, $nper, $pv, $fv, $type);
+
+        // For annuity-due, the interest in period per is accrued on the balance
+        // after the previous beginning-of-period payment. Shift back one period
+        // and use the balance after the first payment as the effective PV.
+        if ($type === 1) {
+            $effectivePer = $per - 1;
+            $effectivePv  = $pv + $pmt;
+        } else {
+            $effectivePer = $per;
+            $effectivePv  = $pv;
+        }
+
+        $balance = $effectivePv * (1 + $rate) ** ($effectivePer - 1)
+            + $pmt * ((1 + $rate) ** ($effectivePer - 1) - 1) / $rate;
+
+        return round(-$balance * $rate, 2);
+    }
+
+    /**
+     * Calculates the principal portion of a payment for a specific period
+     * (equivalent to Excel's PPMT function). Use this alongside
+     * calculateInterestPayment() to break down how much of each payment reduces
+     * the outstanding balance versus covering interest charges — for example,
+     * when modelling the equity built up in a property over time.
+     *
+     * @param float $rate  Periodic interest rate (e.g. 0.005 for 0.5%/month).
+     * @param int   $per   The period for which to calculate principal (1-indexed).
+     * @param int   $nper  Total number of payment periods.
+     * @param float $pv    Present value / initial balance.
+     * @param float $fv    Future value remaining after the last payment (default 0).
+     * @param int   $type  0 = payments at end of period, 1 = start of period.
+     *
+     * @return float Principal portion of the payment (negative indicates money paid out).
+     */
+    public function calculatePrincipalPayment(float $rate, int $per, int $nper, float $pv, float $fv = 0.0, int $type = 0): float
+    {
+        $pmt  = $this->calculatePayment($rate, $nper, $pv, $fv, $type);
+        $ipmt = $this->calculateInterestPayment($rate, $per, $nper, $pv, $fv, $type);
+
+        return round($pmt - $ipmt, 2);
+    }
+
+
 
     function calculatePreservationAge(int $age) {
 

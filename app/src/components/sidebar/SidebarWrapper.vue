@@ -10,6 +10,7 @@ import ScenarioForm from './ScenarioForm.vue'
 
 <style scoped>
 .foss-fi-dashboard-sb__wrapper {
-  overflow: hidden;
+  overflow: scroll;
+  overscroll-behavior: contain;
 }
 </style>

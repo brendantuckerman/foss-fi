@@ -49,8 +49,38 @@ final class ScenarioController extends AbstractController
      #[Route('/scenario/{id}', name: 'scenario')]
      public function show(Scenario $scenario): Response
      {
+        // ## Calculations ##
+        // Scenarion values
+        $age = $scenario->getAge();
+        $income = $scenario->getIncome();
+        $outgoings = $scenario->getOutgoings();
+        $returnRate = $scenario->getReturnRate();
+        $inflationRate = $scenario->getInflationRate();
+        // Shorthand
+        $compute = $this->calculator;
+        // Service calculations
+        $superPreservationAge = $compute->calculatePreservationAge($age);
+        $yearsUntilPreservation = $compute->calculateYearsToPreservation($age);
+        $preservationYear = $compute->calculatePreservationYear($age);
+        $savingsRate = $compute->calculateSavingsRate($income, $outgoings);
+        $inflationAdjustedGrowth = $compute->calculateInflationAdjustedGrowthRate($returnRate , $inflationRate);
+        $monthlyExpenses = $compute->calculateMonthlyExpenses($outgoings);
+        // NB: Need to convert % to decimal
+        $currentPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $yearsUntilPreservation, ($outgoings * -1), 0);
+        //$postPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100);
+
+        // Currently rendered for testing
         return $this->render('scenario/show.html.twig', [
-            'scenario' => $scenario
+            'scenario' => $scenario,
+            'superPreservationAge' => $superPreservationAge,
+            'yearsUntilPreservation' => $yearsUntilPreservation,
+            'preservationYear' => $preservationYear,
+            'savingsRate' => $savingsRate,
+            'inflationAdjustedGrowth' => $inflationAdjustedGrowth,
+            'monthlyExpenses' => $monthlyExpenses,
+            'currentPv' => $currentPv,
+
+
         ]);
      }
 }

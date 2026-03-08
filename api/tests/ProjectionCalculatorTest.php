@@ -205,6 +205,57 @@ class ProjectionCalculatorTest extends TestCase
         $result_2 =  $calculator->calculateRequiredSuper(65000, 0.05);
         $this->assertSame($result_2, 1300000);
     }
+
+    public function testCalculatePayment(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero rate: PMT = -(pv + fv) / nper = -(9000 + 0) / 3 = -3000
+        $result_1 = $calculator->calculatePayment(0.0, 3, 9000);
+        $this->assertEqualsWithDelta(-3000.0, $result_1, 0.01);
+
+        // Standard loan: PMT(5%, 3 periods, $10k) = -(10000 * 1.05^3 * 0.05) / (1.05^3 - 1) ≈ -3672.09
+        $result_2 = $calculator->calculatePayment(0.05, 3, 10000);
+        $this->assertEqualsWithDelta(-3672.09, $result_2, 0.01);
+
+        // Savings goal (pv=0): PMT(0.5%/mo, 240 months, pv=0, fv=100000) ≈ -216.43
+        $result_3 = $calculator->calculatePayment(0.005, 240, 0.0, 100000);
+        $this->assertEqualsWithDelta(-216.43, $result_3, 0.01);
+    }
+
+    public function testCalculateInterestPayment(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero rate: no interest in any period
+        $result_1 = $calculator->calculateInterestPayment(0.0, 1, 3, 10000);
+        $this->assertEqualsWithDelta(0.0, $result_1, 0.01);
+
+        // Period 1: interest on full balance = -(10000 * 0.05) = -500
+        $result_2 = $calculator->calculateInterestPayment(0.05, 1, 3, 10000);
+        $this->assertEqualsWithDelta(-500.0, $result_2, 0.01);
+
+        // Period 2: balance after period 1 = 10000*1.05 + (-3672.09)*1 = 6827.91, interest = -(6827.91 * 0.05) ≈ -341.40
+        $result_3 = $calculator->calculateInterestPayment(0.05, 2, 3, 10000);
+        $this->assertEqualsWithDelta(-341.40, $result_3, 0.01);
+    }
+
+    public function testCalculatePrincipalPayment(): void
+    {
+        $calculator = new ProjectionCalculator();
+
+        // Zero rate: all payment is principal = -(9000 / 3) = -3000
+        $result_1 = $calculator->calculatePrincipalPayment(0.0, 1, 3, 9000);
+        $this->assertEqualsWithDelta(-3000.0, $result_1, 0.01);
+
+        // Period 1: PPMT = PMT - IPMT = -3672.09 - (-500) = -3172.09
+        $result_2 = $calculator->calculatePrincipalPayment(0.05, 1, 3, 10000);
+        $this->assertEqualsWithDelta(-3172.09, $result_2, 0.01);
+
+        // Period 3 (final): PPMT = PMT - IPMT = -3672.09 - (-174.86) ≈ -3497.23
+        $result_3 = $calculator->calculatePrincipalPayment(0.05, 3, 3, 10000);
+        $this->assertEqualsWithDelta(-3497.23, $result_3, 0.01);
+    }
 }
 
 

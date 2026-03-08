@@ -2,3 +2,30 @@
 <pre>
     {{ dump(_context) }}
 </pre>
+    <h1>{{scenario.label}}</h1>
+
+    <h2>Your details</h2>
+    <ul>
+        <li> Age: {{scenario.age}}</li>
+        <li> Income: ${{scenario.income}}</li>
+        <li> Annual expenses: ${{scenario.outgoings}}</li>
+        <li> Net worth: ${{scenario.investmentAmount}}</li>
+        <li> Return rate: {{scenario.returnRate}}%</li>
+        <li> Current super balance: ${{scenario.super}}</li>
+        <li> Employer super guarantee: {{scenario.superGuarantee}}%</li>
+        <li> Inflation rate {{scenario.inflationRate}}%</li>
+    </ul>
+
+
+    <h2>Pre Super </h2>
+
+
+    <ul>
+        <li> Super preservation age: {{superPreservationAge}}</li>
+        <li> Years until you reach preservation: {{yearsUntilPreservation}}</li>
+        <li> Year of preservation {{preservationYear}}</li>
+        <li> Current savings rate: {{savingsRate}}%</li>
+        <li>Inflation adjusted growth rate: {{inflationAdjustedGrowth}}%</li>
+        <li> Monthly expenduture: ${{ monthlyExpenses}}</li>
+        <li> Networth needed in order to sustain current lifestyle until preservation age right now: {{currentPv}}</li>
+    </ul>

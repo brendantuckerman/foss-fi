@@ -15,15 +15,13 @@ class ScenarioType extends AbstractType
         $builder
             ->add('label')
             ->add('age')
+            ->add('investmentAmount')
             ->add('super')
+            ->add('superGuarantee')
+            ->add('returnRate')
+            ->add('inflationRate')
             ->add('income')
             ->add('outgoings')
-            ->add('fiTarget')
-            ->add('investmentAmount')
-            ->add('returnRate')
-            ->add('currentNetWorth')
-            ->add('superGuarantee')
-            ->add('inflationRate')
             ->add('submit', SubmitType::class)
         ;
     }
