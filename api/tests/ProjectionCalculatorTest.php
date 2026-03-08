@@ -184,13 +184,13 @@ class ProjectionCalculatorTest extends TestCase
 
         // Straight up test - no dependencies
         $result_1 = $calculator->calculateDifferenceTillPreSuper(9.15, 15);
-        $this->assertSame($result_1, 6);
+        $this->assertSame($result_1, 5.85);
 
         // Test with dependencies
         $nper_result2 = $calculator->calculateNper(0.1, -200.0, 1000.0); //7.27
         $years_result2 = $calculator->calculateYearsToPreservation(50); //10
         $result_2 = $calculator->calculateDifferenceTillPreSuper($nper_result2, $years_result2);
-         $this->assertSame($result_2, 3);
+         $this->assertSame($result_2, 2.73);
     }
 
     public function testCalculateRequiredSuper(): void
@@ -256,6 +256,39 @@ class ProjectionCalculatorTest extends TestCase
         $result_3 = $calculator->calculatePrincipalPayment(0.05, 3, 3, 10000);
         $this->assertEqualsWithDelta(-3497.23, $result_3, 0.01);
     }
+
+    public function testCreatePreSuperSchedule(): void
+    {
+        //Set up vars
+        $r1_yearsTilPreSuper = 5.4;
+        $r1_annualDepositAmount = 55000;
+        $r1_interestRate = 5.00;
+        $r1_netWorth = 100000;
+        $r1_preSuperTarget = 462008;
+
+        $calculator = new ProjectionCalculator();
+
+        $result_1 = $calculator->createPreSuperSchedule($r1_yearsTilPreSuper, $r1_annualDepositAmount, $r1_interestRate, $r1_netWorth, $r1_preSuperTarget);
+        $this->assertIsArray($result_1, 'This is an array');
+        $this->assertArrayHasKey('1', $result_1);
+        $this->assertArrayHasKey('6', $result_1);
+        $this->assertArrayNotHasKey('7', $result_1);
+        // Check first and last
+        $this->assertEquals($result_1[1]['year'], 2027);
+        $this->assertEquals($result_1[1]['deposit'], 55000);
+        $this->assertEquals($result_1[1]['interestMade'], 5000);
+        $this->assertEquals($result_1[1]['savedSoFar'], 60000);
+        $this->assertEquals($result_1[1]['balance'], 160000);
+        // Last
+        $this->assertEquals($result_1[6]['year'], 2032);
+        $this->assertEquals($result_1[6]['deposit'], 55000);
+        $this->assertEquals($result_1[6]['interestMade'], 21577);
+        $this->assertEquals($result_1[6]['savedSoFar'], 76577);
+        $this->assertEquals($result_1[6]['balance'], 508115);
+
+    }
+
+
 }
 
 

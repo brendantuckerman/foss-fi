@@ -309,10 +309,10 @@ class ProjectionCalculator
      * Take the result of the Nper function and the number of years till preservation
      * and return the difference. Again, casting to int will round down.
      */
-    public function calculateDifferenceTillPreSuper(float $nperResult, int $yearsTillPreservation): int
+    public function calculateDifferenceTillPreSuper(float $nperResult, int $yearsTillPreservation): float
     {
-        $intNper = (int) $nperResult;
-        return $yearsTillPreservation - $intNper;
+        $floatYears = (float) $yearsTillPreservation;
+        return round($floatYears - $nperResult, 2);
     }
 
     // ### Post super calculations ###
@@ -324,5 +324,30 @@ class ProjectionCalculator
         return (int) $floatAmount;
     }
 
+    // ### Schedule creations
+    public function createPreSuperSchedule(float $yearsTilPreSuper, int $annualDepositAmount, float $adjustedInterestRate, float $netWorth): array
+    {
+        $schedule = [];
+        $currentYear = (int) date('Y');
+
+        //For loop while i < $yearsTilPreSuper.
+        // Each i is a period
+        // Need to start at 1 to match years
+        for ($i = 1; $i -1 < $yearsTilPreSuper; $i++ ) {
+            $interestMade = round($netWorth * ($adjustedInterestRate / 100), 0);
+            $savedSoFar = $annualDepositAmount + $interestMade;
+            $netWorth += $savedSoFar;
+
+            $schedule[$i] = [
+                'year' => $currentYear + $i,
+                'deposit' => $annualDepositAmount,
+                'interestMade' => $interestMade,
+                'savedSoFar' => $savedSoFar,
+                'balance' => $netWorth,
+            ];
+        }
+
+        return $schedule;
+    }
 
 }
