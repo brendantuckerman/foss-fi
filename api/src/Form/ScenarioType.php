@@ -21,6 +21,9 @@ class ScenarioType extends AbstractType
             ->add('fiTarget')
             ->add('investmentAmount')
             ->add('returnRate')
+            ->add('currentNetWorth')
+            ->add('superGuarantee')
+            ->add('inflationRate')
             ->add('submit', SubmitType::class)
         ;
     }

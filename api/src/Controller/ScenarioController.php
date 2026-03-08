@@ -24,8 +24,6 @@ final class ScenarioController extends AbstractController
     public function index(Request $request): Response
     {
 
-        $leftOver = $this->calculator->calculateIncomeDifference(10, 5);
-
         //Form
         $scenario = new Scenario();
         $form = $this->createForm(ScenarioType::class, $scenario);
@@ -36,15 +34,23 @@ final class ScenarioController extends AbstractController
             $this->entityManager->persist($scenario);
             $this->entityManager->flush();
 
-            // Go back to the page
-            return $this->redirectToRoute('home');
+            // Go to the new scenario
+            return $this->redirectToRoute('scenario', ['id' => $scenario->getId()]);
+
         }
 
         return $this->render('scenario/index.html.twig', [
             'controller_name' => 'ScenarioController',
-            'Leftover' => $leftOver,
             'scenario_form' => $form,
 
         ]);
     }
+
+     #[Route('/scenario/{id}', name: 'scenario')]
+     public function show(Scenario $scenario): Response
+     {
+        return $this->render('scenario/show.html.twig', [
+            'scenario' => $scenario
+        ]);
+     }
 }
