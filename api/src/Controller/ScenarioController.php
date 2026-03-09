@@ -7,6 +7,7 @@ use App\Form\ScenarioType;
 use App\Service\ProjectionCalculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -43,6 +44,85 @@ final class ScenarioController extends AbstractController
             'controller_name' => 'ScenarioController',
             'scenario_form' => $form,
 
+        ]);
+    }
+
+    #[Route('/api/scenario/calculate', name: 'scenario_calculate', methods: ['POST'])]
+    public function calculate(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!is_array($data)) {
+            return $this->json(['error' => 'Invalid JSON'], 400);
+        }
+
+        $scenario = new Scenario();
+        $scenario->setAge((int) ($data['age'] ?? 0));
+        $scenario->setIncome((int) ($data['income'] ?? 0));
+        $scenario->setOutgoings((int) ($data['outgoings'] ?? 0));
+        $scenario->setReturnRate((string) ($data['returnRate'] ?? 0));
+        $scenario->setInflationRate((string) ($data['inflationRate'] ?? 0));
+        $scenario->setInvestmentAmount((int) ($data['investmentAmount'] ?? 0));
+        $scenario->setSuper((int) ($data['super'] ?? 0));
+        $scenario->setSuperGuarantee((string) ($data['superGuarantee'] ?? 0));
+
+        $age = $scenario->getAge();
+        $income = (int) $scenario->getIncome();
+        $outgoings = $scenario->getOutgoings();
+        $returnRate = (float) $scenario->getReturnRate();
+        $inflationRate = (float) $scenario->getInflationRate();
+        $netWorth = $scenario->getInvestmentAmount();
+        $currentSuper = $scenario->getSuper();
+        $superGuarantee = (float) $scenario->getSuperGuarantee();
+
+        $compute = $this->calculator;
+
+        $annualSavings = $compute->calculateIncomeDifference($income, $outgoings);
+        $superPreservationAge = $compute->calculatePreservationAge($age);
+        $yearsUntilPreservation = $compute->calculateYearsToPreservation($age);
+        $preservationYear = $compute->calculatePreservationYear($age);
+        $savingsRate = $compute->calculateSavingsRate($income, $outgoings);
+        $inflationAdjustedGrowth = $compute->calculateInflationAdjustedGrowthRate($returnRate, $inflationRate);
+        $monthlyExpenses = $compute->calculateMonthlyExpenses($outgoings);
+
+        $currentPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $yearsUntilPreservation, ($outgoings * -1), 0);
+        $superSweetSpot = $compute->calculatePreSuperSweetSpot($outgoings, $yearsUntilPreservation, $inflationAdjustedGrowth / 100, $annualSavings, $netWorth);
+        $postPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $superSweetSpot, -$outgoings, 0);
+
+        $remainingPreSuper = $currentPv - $postPv;
+        $yearsPreSuperNper = $compute->calculateNper($inflationAdjustedGrowth / 100, $annualSavings, $netWorth, -$postPv);
+        $preservationPreSuperDifference = $compute->calculateDifferenceTillPreSuper($yearsPreSuperNper, $yearsUntilPreservation);
+        $yearOfPresuper = date('Y') + ceil($yearsPreSuperNper);
+
+        $superTarget = $compute->calculateRequiredSuper($outgoings);
+        $superResult = $compute->calculateFutureValue($inflationAdjustedGrowth / 100, $yearsPreSuperNper, ($income * ($superGuarantee / 100) * -1), -$currentSuper);
+        $superRequiredForFi = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $preservationPreSuperDifference - 1.71, 0, -$superTarget);
+        $superNeeded = $superRequiredForFi - $superResult;
+        $yearsToSuperTarget = $compute->calculateNper($inflationAdjustedGrowth / 100, $income, $superResult, -$superRequiredForFi);
+
+        $yearsToFi = $yearsToSuperTarget + $yearsPreSuperNper;
+        $yearOfFi = ceil(date('Y') + $yearsToFi);
+
+        return $this->json([
+            'superPreservationAge' => $superPreservationAge,
+            'yearsUntilPreservation' => $yearsUntilPreservation,
+            'preservationYear' => $preservationYear,
+            'savingsRate' => $savingsRate,
+            'inflationAdjustedGrowth' => $inflationAdjustedGrowth,
+            'monthlyExpenses' => $monthlyExpenses,
+            'currentPv' => $currentPv,
+            'postPv' => $postPv,
+            'remainingPreSuper' => $remainingPreSuper,
+            'yearsPreSuperNper' => $yearsPreSuperNper,
+            'yearsDifferencePreSuper' => $preservationPreSuperDifference,
+            'yearOfPreSuper' => $yearOfPresuper,
+            'superTarget' => $superTarget,
+            'superResult' => $superResult,
+            'superRequiredForFi' => $superRequiredForFi,
+            'superNeeded' => $superNeeded,
+            'yearsToSuperTarget' => $yearsToSuperTarget,
+            'yearsToFi' => $yearsToFi,
+            'yearOfFi' => $yearOfFi,
         ]);
     }
 

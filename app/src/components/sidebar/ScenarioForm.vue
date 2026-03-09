@@ -5,8 +5,32 @@ import { useWindowSize } from '@vueuse/core'
 
 const { width } = useWindowSize()
 // Form submission
-function handleSubmit(data: Record<string, unknown>) {
-  console.log('Scenario data:', data)
+import { useScenarioStore } from '@/stores/scenario'
+import { useInputsStore } from '@/stores/inputs'
+const store = useScenarioStore()
+const inputsStore = useInputsStore()
+
+interface FormData {
+  label: string
+  age: number
+  income: number
+  outgoings: number
+  investmentAmount: number
+  super: number
+  superGuarantee: number
+  returnRate: number
+  inflationRate: number
+}
+
+async function handleSubmit(data: FormData) {
+  // Set up store
+  inputsStore.label = data.label
+  inputsStore.age = data.age
+  inputsStore.income = data.income
+  inputsStore.outgoings = data.outgoings
+
+  await store.calculateScenario(data)
+  console.log(store.calculations)
 }
 </script>
 
@@ -16,7 +40,7 @@ function handleSubmit(data: Record<string, unknown>) {
     <FormKit
       type="form"
       @submit="handleSubmit"
-      submit-label="Create Scenario"
+      submit-label="Calculate"
       name="scenario-form"
       id="scenario-form"
     >
@@ -105,8 +129,13 @@ function handleSubmit(data: Record<string, unknown>) {
 
       <FormKit
         type="number"
-        name="currentNetWorth"
+        name="investmentAmount"
         label="Current Net Worth (Excluding Super or Home Equity)"
+        validation="min:0|max:10000000"
+        :validation-messages="{
+          min: 'Must be between $0 and $10,000,000.',
+          max: 'Must be between $0 and $10,000,000.',
+        }"
       />
       <FormKit
         type="number"
@@ -126,36 +155,29 @@ function handleSubmit(data: Record<string, unknown>) {
         value="12.00"
         help="From July 1, 2025 this is 12% if you are 18 or older."
       />
-      <FormKit
-        type="number"
-        name="investmentAmount"
-        label="Investment Amount"
-        validation="min:0|max:10000000"
-        :validation-messages="{
-          min: 'Must be between $0 and $10,000,000.',
-          max: 'Must be between $0 and $10,000,000.',
-        }"
-      />
+
       <FormKit
         type="number"
         name="returnRate"
         label="Return Rate (%)"
         step="0.01"
+        value="8.00"
         validation="min:0|max:100"
         :validation-messages="{
           min: 'Must be between 0% and 100%.',
           max: 'Must be between 0% and 100%.',
         }"
       />
-      <FormKit type="number" name="inflationRate" label="Inflation Rate (%)" step="0.01" />
       <FormKit
         type="number"
-        name="fiTarget"
-        label="FI Target"
-        validation="min:0|max:10000000"
+        name="inflationRate"
+        label="Inflation Rate (%)"
+        step="0.01"
+        value="3.00"
+        validation="min:0|max:100"
         :validation-messages="{
-          min: 'Must be between $0 and $10,000,000.',
-          max: 'Must be between $0 and $10,000,000.',
+          min: 'Must be between 0% and 100%.',
+          max: 'Must be between 0% and 100%.',
         }"
       />
     </FormKit>

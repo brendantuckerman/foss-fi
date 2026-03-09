@@ -14,12 +14,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ScenarioRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-    operations: [
-        new Get(normalizationContext: ['groups' => 'scenario:item']),
-        new GetCollection(normalizationContext: ['groups' => 'scenario:list'])
-    ],
-    order: ['label' => 'DESC', 'createdAt' => 'DESC'],
-    paginationEnabled: true
+    // operations: [
+    //     new Get(normalizationContext: ['groups' => 'scenario:item']),
+    //     new GetCollection(normalizationContext: ['groups' => 'scenario:list'])
+    // ],
+    // order: ['label' => 'DESC', 'createdAt' => 'DESC'],
+    // paginationEnabled: true
 )]
 class Scenario
 {

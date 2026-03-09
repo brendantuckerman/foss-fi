@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+
 import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
 import { Icon } from '@iconify/vue'
 import ColorMode from './components/ColorMode.vue'

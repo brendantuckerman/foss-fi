@@ -1,17 +1,31 @@
 // app/src/stores/scenario.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+interface FormData {
+  label: string
+  age: number
+  income: number
+  outgoings: number
+  investmentAmount: number
+  super: number
+  superGuarantee: number
+  returnRate: number
+  inflationRate: number
+}
 
 export const useScenarioStore = defineStore('scenario', () => {
-  const scenario = ref(null)
+  const calculations = ref(null)
 
-  async function fetchScenario(id: number) {
-    const res = await fetch(`/api/scenarios/${id}`, {
-      headers: { Accept: 'application/json' },
+  async function calculateScenario(data: FormData) {
+    const res = await fetch('/api/scenario/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
     })
+
     if (!res.ok) throw new Error(`Failed: ${res.status}`)
-    scenario.value = await res.json()
+    calculations.value = await res.json()
   }
 
-  return { scenario, fetchScenario }
+  return { calculations, calculateScenario }
 })

@@ -37,6 +37,8 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/scenario/calculate, methods: [POST], roles: PUBLIC_ACCESS }
+        - { path: ^/api, methods: [POST, PATCH, PUT, DELETE], roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
