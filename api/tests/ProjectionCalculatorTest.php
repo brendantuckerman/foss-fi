@@ -288,6 +288,33 @@ class ProjectionCalculatorTest extends TestCase
 
     }
 
+    public function testCreatePreSuperToZero(): void
+    {
+         //Set up vars
+        $r1_initialYear = 2031;
+        $r1_principal = 462008;
+        $r1_expenses = 65000;
+        $r1_interestRate = 5.00 / 100;
+
+
+        $calculator = new ProjectionCalculator();
+        $result_1 = $calculator->createPreSuperToZero($r1_initialYear, $r1_principal, $r1_expenses, $r1_interestRate);
+        $this->assertIsArray($result_1, 'Result is an array');
+        //Ensure correct amount of results
+        $this->assertArrayHasKey('0', $result_1);
+        $this->assertArrayHasKey('8', $result_1);
+        $this->assertArrayNotHasKey('9', $result_1);
+        //Check first and last
+        $this->assertEquals($result_1[0]['year'], 2031);
+        $this->assertEquals($result_1[0]['principal'], $r1_principal);
+        $this->assertEquals($result_1[0]['interestEarned'], 23100);
+        // Last
+        $this->assertEquals($result_1[8]['year'], 2039);
+        $this->assertEquals($result_1[8]['principal'], 61904);
+        $this->assertEquals($result_1[8]['interestEarned'], 3095 );
+
+    }
+
 
 }
 

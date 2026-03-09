@@ -315,6 +315,68 @@ class ProjectionCalculator
         return round($floatYears - $nperResult, 2);
     }
 
+    /**
+     * NB: Ensure float 5.00 percentage rates are divided by 100.
+     *
+     * @param int $annualExpenses
+     * @param int $yearsTill preservation number of years til preservation
+     * @param float $interestRate interest rate adjusted for inflation. / 100
+     *
+     * @return int number of periods needed for preSuperSweet spot,
+     * used in the calculation of the presuper amount.
+     *
+     *
+     */
+    public function calculatePreSuperSweetSpot(int $annualExpenses, int $yearsTillPreservation, float $interestRate,  int $yearlySavings, int $netWorth): int
+    {
+        //We need some initial values for the first period
+        $initialPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation, -$annualExpenses, 0);
+        $initialPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation, -$annualExpenses, 0) * $interestRate;
+        $initalPvTotal = ($initialPvPositive + $initialPvNegative) - $annualExpenses;
+
+        $initialFv = $this->calculateFutureValue($interestRate, 0, -$yearlySavings, -$netWorth);
+
+        $intialSubTotal = $initalPvTotal - $initialFv;
+        //This determines when we stop
+        $subTotal = $intialSubTotal;
+        //Track 'columns'
+        $subsequentPv = 0;
+        $subsequentFv = 0;
+
+        $results = [];
+        for ($i=0; $subTotal < 0; $i++) {
+            //Set inital values
+            if($i = 0) {
+                $results[] = [
+                    'pv' => $initalPvTotal,
+                    'fv' => $initialFv,
+                    'subTotal' => $subTotal
+                ];
+            $subPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0);
+            $subPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0) * $interestRate;
+            $subsequentPv = ($subPvPositive + $subPvNegative) - $annualExpenses;
+
+            $subsequentFv = $this->calculateFutureValue($interestRate, $i, -$yearlySavings, -$netWorth);
+            $subTotal = $subsequentPv - $subsequentFv;
+
+            } else {
+                $results[] = [
+                    'pv' => $subsequentPv,
+                    'fv' => $subsequentFv,
+                    'subTotal' => $subTotal
+                ];
+                $subPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0);
+                $subPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0) * $interestRate;
+                $subsequentPv = ($subPvPositive + $subPvNegative) - $annualExpenses;
+
+                $subsequentFv = $this->calculateFutureValue($interestRate, $i, -$yearlySavings, -$netWorth);
+                $subTotal = $subsequentPv - $subsequentFv;
+
+            }
+        }
+        return $i;
+    }
+
     // ### Post super calculations ###
 
 
@@ -325,6 +387,9 @@ class ProjectionCalculator
     }
 
     // ### Schedule creations
+    /**
+     * NB: The loop of this function begins at to represent a payment period
+     */
     public function createPreSuperSchedule(float $yearsTilPreSuper, int $annualDepositAmount, float $adjustedInterestRate, float $netWorth): array
     {
         $schedule = [];
@@ -347,6 +412,35 @@ class ProjectionCalculator
             ];
         }
 
+        return $schedule;
+    }
+
+    /**
+     *  Creates an array to display the reduction of a preSuper
+     *  amount to zero, starting at the preSuper savings target.
+     *
+     * @param int $intialYear the year preSuper savings is reached, calculated via
+     * calculatePreservationYear();
+     * @param int $pincipal the amount of pre super savings (i.e the target)
+     * @param int $annualExpenses lifestyle costs per year
+     * @param float $annualInterest - the inflation reduced interest rate / 100
+     *
+     * @return array the schedule year on year.
+     */
+    public function createPreSuperToZero(int $initialYear, int $principal, int $annualExpenses, float $annualInterest): array
+    {
+        $schedule = [];
+        for ($i = $initialYear; $principal > 0; $i++ ) {
+            $interestEarned = round($principal * $annualInterest, 0);
+            $schedule[] = [
+                'year' => $i,
+                'principal' => $principal,
+                'interestEarned' => $interestEarned
+            ];
+
+        $principal = $principal - $annualExpenses + $interestEarned;
+
+        }
         return $schedule;
     }
 
