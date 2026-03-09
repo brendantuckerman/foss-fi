@@ -315,7 +315,18 @@ class ProjectionCalculatorTest extends TestCase
 
     }
 
+    public function testCalculatePreSuperSweetSpot(): void
+    {
+        $calculator = new ProjectionCalculator();
+        $r1_annualExpenses = 65000;
+        $r1_yearsTillPreservation = 13;
+        $r1_interestRate = 5.00 / 100;
+        $r1_yearlySavings = 55000;
+        $r1_netWorth = 100000;
 
+        $result_1 = $calculator->calculatePreSuperSweetSpot($r1_annualExpenses, $r1_yearsTillPreservation, $r1_interestRate, $r1_yearlySavings, $r1_netWorth);
+        $this->assertEquals($result_1, 8);
+    }
 }
 
 

@@ -93,10 +93,10 @@ class ProjectionCalculator
 
         $factor = (1 + $rate) ** $nper;
 
-        return -(
+        return round(-(
             $pmt * (1 + $rate * $type) * ($factor - 1) / $rate
             + $pv * $factor
-        );
+        ), 2);
     }
 
     /**
@@ -288,7 +288,7 @@ class ProjectionCalculator
             if ($pmt === 0.0) {
                 throw new \InvalidArgumentException('PMT and rate cannot both be zero.');
             }
-            return -($pv + $fv) / $pmt;
+            return round(-($pv + $fv) / $pmt, 2);
         }
 
         // For annuity-due (type=1), payments earn one extra period of interest.
@@ -303,11 +303,11 @@ class ProjectionCalculator
             );
         }
 
-        return log($numerator / $denominator) / log(1 + $rate);
+        return round(log($numerator / $denominator) / log(1 + $rate),2);
     }
     /**
      * Take the result of the Nper function and the number of years till preservation
-     * and return the difference. Again, casting to int will round down.
+     * and return the difference.
      */
     public function calculateDifferenceTillPreSuper(float $nperResult, int $yearsTillPreservation): float
     {
@@ -336,35 +336,31 @@ class ProjectionCalculator
 
         $initialFv = $this->calculateFutureValue($interestRate, 0, -$yearlySavings, -$netWorth);
 
-        $intialSubTotal = $initalPvTotal - $initialFv;
+        $intialSubTotal = round($initalPvTotal - $initialFv, 2);
         //This determines when we stop
         $subTotal = $intialSubTotal;
         //Track 'columns'
         $subsequentPv = 0;
         $subsequentFv = 0;
 
-        $results = [];
-        for ($i=0; $subTotal < 0; $i++) {
-            //Set inital values
-            if($i = 0) {
-                $results[] = [
-                    'pv' => $initalPvTotal,
-                    'fv' => $initialFv,
-                    'subTotal' => $subTotal
-                ];
-            $subPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0);
-            $subPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0) * $interestRate;
-            $subsequentPv = ($subPvPositive + $subPvNegative) - $annualExpenses;
+        // $results = [];
+        //i is the number of periods and will be returned
+        $result = 0;
 
-            $subsequentFv = $this->calculateFutureValue($interestRate, $i, -$yearlySavings, -$netWorth);
-            $subTotal = $subsequentPv - $subsequentFv;
+        for ($i = 0; $subTotal > 0; $i++) {
+            $result = $i;
+            //Set inital values
+            if($i == 0) {
+
+                $subPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0);
+                $subPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0) * $interestRate;
+                $subsequentPv = ($subPvPositive + $subPvNegative) - $annualExpenses;
+
+                $subsequentFv = $this->calculateFutureValue($interestRate, $i, -$yearlySavings, -$netWorth);
+                $subTotal = $subsequentPv - $subsequentFv;
 
             } else {
-                $results[] = [
-                    'pv' => $subsequentPv,
-                    'fv' => $subsequentFv,
-                    'subTotal' => $subTotal
-                ];
+
                 $subPvPositive = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0);
                 $subPvNegative = $this->calculatePresentValue($interestRate, $yearsTillPreservation - ($i +1), -$annualExpenses, 0) * $interestRate;
                 $subsequentPv = ($subPvPositive + $subPvNegative) - $annualExpenses;
@@ -374,7 +370,7 @@ class ProjectionCalculator
 
             }
         }
-        return $i;
+        return $yearsTillPreservation - $result;
     }
 
     // ### Post super calculations ###

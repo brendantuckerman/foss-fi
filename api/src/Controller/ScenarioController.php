@@ -56,9 +56,14 @@ final class ScenarioController extends AbstractController
         $outgoings = $scenario->getOutgoings();
         $returnRate = $scenario->getReturnRate();
         $inflationRate = $scenario->getInflationRate();
+        $netWorth = $scenario->getInvestmentAmount();
+        $currentSuper = $scenario->getSuper();
+        $superGuarantee = $scenario->getSuperGuarantee();
         // Shorthand
         $compute = $this->calculator;
         // Service calculations
+        // PRE SUPER
+        $annualSavings = $compute->calculateIncomeDifference($income, $outgoings);
         $superPreservationAge = $compute->calculatePreservationAge($age);
         $yearsUntilPreservation = $compute->calculateYearsToPreservation($age);
         $preservationYear = $compute->calculatePreservationYear($age);
@@ -67,7 +72,27 @@ final class ScenarioController extends AbstractController
         $monthlyExpenses = $compute->calculateMonthlyExpenses($outgoings);
         // NB: Need to convert % to decimal
         $currentPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $yearsUntilPreservation, ($outgoings * -1), 0);
-        //$postPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100);
+
+        // Post PV requires the number of periods
+        $superSweetSpot = $compute->calculatePreSuperSweetSpot($outgoings, $yearsUntilPreservation, $inflationAdjustedGrowth / 100,  $annualSavings, $netWorth);
+        $postPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $superSweetSpot, -$outgoings, 0);
+
+        $remainingPreSuper = $currentPv - $postPv;
+        $yearsPreSuperNper = $compute->calculateNper($inflationAdjustedGrowth/ 100, $annualSavings, $netWorth, -$postPv);
+        $preservationPreSuperDifference = $compute->calculateDifferenceTillPreSuper($yearsPreSuperNper, $yearsUntilPreservation);
+
+        $yearOfPresuper = date('Y') + ceil($yearsPreSuperNper);
+
+        // Super
+        $superTarget = $compute->calculateRequiredSuper($outgoings);
+        $superResult = $compute->calculateFutureValue($inflationAdjustedGrowth / 100, $yearsPreSuperNper, ($income * ($superGuarantee / 100) * -1), -$currentSuper);
+        $superRequiredForFi = $compute->calculatePresentValue($inflationAdjustedGrowth /100, $preservationPreSuperDifference - 1.71,0, -$superTarget );
+        $superNeeded = $superRequiredForFi - $superResult;
+        $yearsToSuperTarget = $compute->calculateNper($inflationAdjustedGrowth /100, $income, $superResult, -$superRequiredForFi);
+
+        // Grand total
+        $yearsToFi = $yearsToSuperTarget + $yearsPreSuperNper;
+        $yearOfFi = ceil(date('Y') + $yearsToFi);
 
         // Currently rendered for testing
         return $this->render('scenario/show.html.twig', [
@@ -79,6 +104,18 @@ final class ScenarioController extends AbstractController
             'inflationAdjustedGrowth' => $inflationAdjustedGrowth,
             'monthlyExpenses' => $monthlyExpenses,
             'currentPv' => $currentPv,
+            'postPv' => $postPv,
+            'remainingPreSuper' => $remainingPreSuper,
+            'yearsPreSuperPv' => $yearsPreSuperNper,
+            'yearsDifferencePreSuper' => $preservationPreSuperDifference,
+            'yearOfPreSuper' => $yearOfPresuper,
+            'superTarget' => $superTarget,
+            'superResult' => $superResult,
+            'superRequiredForFi' => $superRequiredForFi,
+            'superNeeded' => $superNeeded,
+            'yearsToSuperTarget' => $yearsToSuperTarget,
+            'yearsToFi' => $yearsToFi,
+            'yearOfFi' => $yearOfFi
 
 
         ]);

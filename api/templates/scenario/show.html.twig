@@ -4,6 +4,11 @@
 </pre>
     <h1>{{scenario.label}}</h1>
 
+    <h2>FIRE Results</h2>
+
+    <p>You will be FIRE in <strong>{{yearsToFi}}</strong> years.<p>
+    <p>You will be FIRE in <strong>{{yearOfFi}}</strong>.</p>
+
     <h2>Your details</h2>
     <ul>
         <li> Age: {{scenario.age}}</li>
@@ -27,5 +32,23 @@
         <li> Current savings rate: {{savingsRate}}%</li>
         <li>Inflation adjusted growth rate: {{inflationAdjustedGrowth}}%</li>
         <li> Monthly expenduture: ${{ monthlyExpenses}}</li>
-        <li> Networth needed in order to sustain current lifestyle until preservation age right now: {{currentPv}}</li>
+        <li> Networth needed in order to sustain current lifestyle until preservation age right now: ${{currentPv}}</li>
+        <li>Networth needed in order to sustain current lifestyle until preservation age after you hit your Pre Super Number: ${{postPv}}</li>
+        <li> What you need to save: ${{remainingPreSuper}}</li>
+        <li>How long in years will it take you to get to your number factoring in your current net worth, inlfation rate and rate of return: {{yearsPreSuperPv}}</li>
+        <li>Preservation age minus how long it will take you to reach your Pre Super Number in years: {{yearsDifferencePreSuper}} </li>
+        <li>Year you will hit preSuper: {{yearOfPreSuper}}</li>
+    </ul>
+
+
+     <h2>Super </h2>
+
+     <ul>
+        <li> Super preservation age: {{superPreservationAge}}</li>
+        <li>Year you will hit preSuper: {{yearOfPreSuper}}</li>
+        <li>Super needed to maintina lifestyle forever: ${{superTarget}}</li>
+        <li>How much Super you will have at the end of reaching your Pre Super Number: {{superResult}}</li>
+        <li>How much you need to have in Super at the start of FIRE for it to grow to you FI number: ${{superRequiredForFi}}</li>
+        <li>How much more $ you need to put in before you FIRE {{superNeeded}} </li>
+        <li>How long in years will it take you to get to your number factoring in your current net worth, inlfation rate and rate of return: {{yearsToSuperTarget}}</li>
     </ul>
