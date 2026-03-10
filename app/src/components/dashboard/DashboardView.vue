@@ -2,7 +2,7 @@
 import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
 
-const formStore = useInputsStore()
+const inputsStore = useInputsStore()
 
 // const store = useScenarioStore()
 
@@ -10,9 +10,20 @@ const formStore = useInputsStore()
 </script>
 
 <template>
-  <h1>Dashboard</h1>
-  <p>Here are your results:</p>
+  <h1 v-if="inputsStore" class="text-xl font-bold text-center">{{ inputsStore.label }}</h1>
+  <h1 v-else>Your Dashboard</h1>
+  <p v-if="!inputsStore">
+    Use the tab to the left to enter your details. Your results will appear below
+  </p>
+
   <ul>
-    <li v-for="(item, key) in formStore" :key="key">{{ key }}: {{ item }}</li>
+    <li>{{ inputsStore.age }}</li>
+    <li>{{ inputsStore.income }}</li>
+    <li>{{ inputsStore.outgoings }}</li>
+    <li>{{ inputsStore.investmentAmount }}</li>
+    <li>{{ inputsStore.currentSuper }}</li>
+    <li>{{ inputsStore.superGuaranteee }}</li>
+    <li>{{ inputsStore.returnRate }}</li>
+    <li>{{ inputsStore.inflationRate }}</li>
   </ul>
 </template>

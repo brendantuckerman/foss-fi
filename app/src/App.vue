@@ -31,8 +31,8 @@ const toggleState = ref(false)
           Australian context.
         </p>
         <p v-if="width < 860" class="text-sm flex">
-          <Icon icon="material-symbols:right-click" width="24" height="24" />Click the tab on the
-          left to enter details.
+          <Icon icon="material-symbols:right-click" width="24" height="24" />Tap the tab on the left
+          to enter details.
         </p>
         <p v-else class="text-sm">Use the panel to the left to enter details.</p>
       </div>
@@ -58,8 +58,8 @@ const toggleState = ref(false)
         @click="toggleState = !toggleState"
       >
         <span v-if="!toggleState" class="foss-fi-sidebar__toggle-span"
-          ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />Adjust
-          values
+          ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />Enter
+          details
         </span>
         <span v-else class="foss-fi-sidebar__toggle-span"
           ><Icon icon="material-symbols:close-rounded" width="24" height="24" />

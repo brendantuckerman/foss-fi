@@ -28,6 +28,11 @@ async function handleSubmit(data: FormData) {
   inputsStore.age = data.age
   inputsStore.income = data.income
   inputsStore.outgoings = data.outgoings
+  inputsStore.investmentAmount = data.investmentAmount
+  inputsStore.currentSuper = data.super
+  inputsStore.superGuaranteee = data.superGuarantee
+  inputsStore.returnRate = data.returnRate
+  inputsStore.inflationRate = data.inflationRate
 
   await store.calculateScenario(data)
   console.log(store.calculations)
