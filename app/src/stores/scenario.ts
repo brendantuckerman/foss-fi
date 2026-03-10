@@ -5,6 +5,7 @@ interface FormData {
   label: string
   age: number
   income: number
+  postTaxIncome: number
   outgoings: number
   investmentAmount: number
   super: number

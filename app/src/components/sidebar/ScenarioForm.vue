@@ -70,13 +70,17 @@ async function handleSubmit(data: FormData) {
       <FormKit
         type="number"
         name="income"
-        label="Income"
+        label="Pre-tax Income"
         validation="required|min:0|max:10000000"
         :validation-messages="{
           min: 'Must be between $0 and $10,000,000.',
           max: 'Must be between $0 and $10,000,000.',
         }"
-        :help="width < 860 ? `Your household's annual income after tax.` : ''"
+        :help="
+          width < 860
+            ? `Your household's annual income BEFORE tax. Used to calculate superannuation contributions`
+            : ''
+        "
       >
         <template v-if="width > 860" #label="{ label, id }">
           <label :for="id" class="formkit-label flex items-center gap-1">
@@ -92,13 +96,27 @@ async function handleSubmit(data: FormData) {
                   />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Your annual income after tax.</p>
+                  <p>
+                    Your household's annual income BEFORE tax. Used to calculate superannuation
+                    contributions.
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </label>
         </template>
       </FormKit>
+      <FormKit
+        type="number"
+        name="postTaxIncome"
+        label="Post-tax Income"
+        validation="required|min:0|max:10000000"
+        :validation-messages="{
+          min: 'Must be between $0 and $10,000,000.',
+          max: 'Must be between $0 and $10,000,000.',
+        }"
+        :help="width < 860 ? `Your household's annual income AFTER tax.` : ''"
+      />
       <FormKit
         type="number"
         name="outgoings"

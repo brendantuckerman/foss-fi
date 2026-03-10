@@ -7,6 +7,7 @@ export const useInputsStore = defineStore('inputs', () => {
   const label = ref<string | null>(null)
   const age = ref<number | null>(null)
   const income = ref<number | null>(null)
+  const postTaxIncome = ref<number | null>(null)
   const outgoings = ref<number | null>(null)
   const investmentAmount = ref<number | null>(null)
   const currentSuper = ref<number | null>(null)
@@ -18,6 +19,7 @@ export const useInputsStore = defineStore('inputs', () => {
     label,
     age,
     income,
+    postTaxIncome,
     outgoings,
     investmentAmount,
     currentSuper,
