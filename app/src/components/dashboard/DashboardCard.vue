@@ -10,19 +10,31 @@ import {
 
 defineProps<{
   title: string
-  description?: string
+  headerDescription?: string
+  footerDescription?: string
+  cardFooter?: string
 }>()
 </script>
 
 <template>
-  <Card class="w-full max-w-sm">
+  <Card class="w-full max-w-sm foss-fi__dashboard-card">
     <CardHeader>
-      <CardDescription> Years until FIRE</CardDescription>
-      <CardTitle class="text-3xl font-extrabold">{{ title }}</CardTitle>
+      <CardDescription>{{ headerDescription }}</CardDescription>
+      <CardTitle class="foss-fi__dashboard-card-title text-3xl font-extrabold">{{
+        title
+      }}</CardTitle>
     </CardHeader>
     <CardContent>
       <slot />
     </CardContent>
-    <CardFooter class="flex flex-col gap-2"> </CardFooter>
+    <CardFooter v-if="cardFooter">
+      <CardDescription> {{ footerDescription }} </CardDescription>
+    </CardFooter>
   </Card>
 </template>
+
+<style scoped lang="css">
+.foss-fi__dashboard-card-title {
+  font-weight: 700;
+}
+</style>

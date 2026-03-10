@@ -15,7 +15,7 @@ interface FormData {
 }
 
 export const useScenarioStore = defineStore('scenario', () => {
-  const calculations = ref(null)
+  const calculations = ref()
 
   async function calculateScenario(data: FormData) {
     const res = await fetch('/api/scenario/calculate', {

@@ -97,6 +97,7 @@ final class ScenarioController extends AbstractController
         $currentSuper = $scenario->getSuper();
         $superGuarantee = (float) $scenario->getSuperGuarantee();
 
+        //Just to stop me typing it so many times
         $compute = $this->calculator;
 
         $annualSavings = $compute->calculateIncomeDifference($postTaxIncome, $outgoings);

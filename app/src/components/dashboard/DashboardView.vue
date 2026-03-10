@@ -2,12 +2,13 @@
 import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
 import DashboardCard from './DashboardCard.vue'
+import { Icon } from '@iconify/vue'
 
 const inputsStore = useInputsStore()
 
 const scenarioStore = useScenarioStore()
 
-console.log('Results', scenarioStore.calculations.superPreservationAge)
+console.log('Results', scenarioStore.calculations)
 
 // const store = useScenarioStore()
 
@@ -15,41 +16,107 @@ console.log('Results', scenarioStore.calculations.superPreservationAge)
 </script>
 
 <template>
-  <h1 v-if="inputsStore" class="text-3xl font-bold text-center">{{ inputsStore.label }}</h1>
-  <h1 v-else>Your Dashboard</h1>
-  <p class="text-xs">A FIRE Dashboard</p>
-  <p v-if="!inputsStore">
-    Use the tab to the left to enter your details. Your results will appear below
-  </p>
-  <h2 class="text-2xl">Your information</h2>
-  <ul>
-    <li>{{ inputsStore.age }}</li>
-    <li>{{ inputsStore.income }}</li>
-    <li>{{ inputsStore.outgoings }}</li>
-    <li>{{ inputsStore.investmentAmount }}</li>
-    <li>{{ inputsStore.currentSuper }}</li>
-    <li>{{ inputsStore.superGuaranteee }}</li>
-    <li>{{ inputsStore.returnRate }}</li>
-    <li>{{ inputsStore.inflationRate }}</li>
-  </ul>
+  <section v-if="inputsStore.label">
+    <h1 class="text-3xl font-bold text-center">{{ inputsStore.label }}</h1>
+    <p class="text-xs">A FIRE Dashboard</p>
+    <p v-if="!inputsStore">
+      Use the tab to the left to enter your details. Your results will appear below
+    </p>
+    <h2 class="text-2xl">Your information</h2>
+    <ul>
+      <li>{{ inputsStore.age }}</li>
+      <li>{{ inputsStore.income }}</li>
+      <li>{{ inputsStore.outgoings }}</li>
+      <li>{{ inputsStore.investmentAmount }}</li>
+      <li>{{ inputsStore.currentSuper }}</li>
+      <li>{{ inputsStore.superGuaranteee }}</li>
+      <li>{{ inputsStore.returnRate }}</li>
+      <li>{{ inputsStore.inflationRate }}</li>
+    </ul>
+  </section>
 
-  <div v-if="scenarioStore" class="foss-fi-dashboard__results flex flex-col gap-4">
-    <section class="foss-fi-dashboard__results-overall">
+  <div v-if="scenarioStore.calculations" class="foss-fi-dashboard__results flex flex-col gap-4">
+    <section class="foss-fi-dashboard__results-overall grid gap-4">
       <h2 class="text-2xl">Your results</h2>
       <!-- Total Results -->
       <DashboardCard
-        v-if="scenarioStore.calculations.yearsToFi"
-        :title="scenarioStore.calculations.yearsToFi"
+        v-if="scenarioStore.calculations.yearsToFi && scenarioStore.calculations.yearOfFi"
+        :title="scenarioStore.calculations.yearsToFi.toFixed(2).toString()"
+        header-description="Years until FIRE"
       >
+        <Icon
+          icon="material-symbols:calendar-month-rounded"
+          width="24"
+          height="24"
+          style="color: #b71319"
+          class="inline"
+        />
         <p v-if="scenarioStore.calculations.yearOfFi">
           You will reach FIRE in
-          <span class="font-bold text-2xl">{{ scenarioStore.calculations.yearOfFi }}</span>
+          <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
+            scenarioStore.calculations.yearOfFi.toString()
+          }}</span>
         </p>
       </DashboardCard>
     </section>
-    <section class="foss-fi-dashboard__results-pre-super">
+    <section class="foss-fi-dashboard__results-pre-super grid gap-4">
       <h3 class="text-xl">Pre super</h3>
       <p>FIRE is broken into two phases- the pre super phase and the post super phase.</p>
+      <!-- Super years -->
+      <DashboardCard
+        v-if="scenarioStore.calculations.superPreservationAge"
+        :title="`${scenarioStore.calculations.superPreservationAge.toString()} / ${scenarioStore.calculations.yearsUntilPreservation.toString()}`"
+        header-description="Age you can access your superannuation / Years until you can access your superannuation  "
+      >
+        <Icon
+          icon="material-symbols:calendar-month-rounded"
+          width="24"
+          height="24"
+          style="color: #b71319"
+        />
+        <p v-if="scenarioStore.calculations.yearOfFi">
+          You can access your super in
+          <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
+            scenarioStore.calculations.preservationYear.toString()
+          }}</span>
+        </p>
+      </DashboardCard>
+
+      <!-- Pre Super Expenses and Savings rate -->
+
+      <DashboardCard
+        v-if="scenarioStore.calculations.savingsRate"
+        :title="`${scenarioStore.calculations.savingsRate.toString()}%`"
+        header-description="Your current savings rate."
+      >
+        <p v-if="scenarioStore.calculations.yearOfFi">
+          You are spending
+          <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl"
+            >${{ scenarioStore.calculations.monthlyExpenses.toLocaleString() }}</span
+          >
+          per month.
+        </p>
+      </DashboardCard>
+
+      <!-- Pre super $ -->
+
+      <DashboardCard
+        v-if="scenarioStore.calculations.postPv"
+        :title="`$${scenarioStore.calculations.postPv.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"
+        header-description="Amount you need to get you to your super year."
+      >
+        <p v-if="scenarioStore.calculations.yearOfFi">
+          You'll need to save
+          <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl"
+            >${{
+              scenarioStore.calculations.remainingPreSuper.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            }}</span
+          >.
+        </p>
+      </DashboardCard>
 
       <hr />
     </section>
@@ -58,3 +125,9 @@ console.log('Results', scenarioStore.calculations.superPreservationAge)
     </section>
   </div>
 </template>
+
+<style scoped lang="css">
+.foss-fi-dashboard__card-years-to-fi-span {
+  font-weight: 700;
+}
+</style>
