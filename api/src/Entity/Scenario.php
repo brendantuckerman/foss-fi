@@ -150,12 +150,12 @@ class Scenario
     }
     public function getPostTaxIncome(): ?string
     {
-        return $this->income;
+        return $this->postTaxIncome;
     }
 
-    public function setPostTaxIncome(?string $income): static
+    public function setPostTaxIncome(?string $postTaxIncome): static
     {
-        $this->income = $income;
+        $this->postTaxIncome = $postTaxIncome;
 
         return $this;
     }
