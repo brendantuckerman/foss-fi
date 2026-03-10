@@ -21,6 +21,7 @@ class ScenarioType extends AbstractType
             ->add('returnRate')
             ->add('inflationRate')
             ->add('income')
+            ->add('postTaxIncome')
             ->add('outgoings')
             ->add('submit', SubmitType::class)
         ;

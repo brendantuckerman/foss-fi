@@ -46,6 +46,16 @@ class Scenario
     #[ORM\Column(nullable: true)]
     #[Assert\NotBlank]
     #[Groups(['scenario:list', 'scenario:item'])]
+    #[Assert\Range(
+        min: 0,
+        max: 10000000,
+        notInRangeMessage: 'The value must be between {{ min }} and {{ max }}.',
+    )]
+    private ?int $postTaxIncome = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
+    #[Groups(['scenario:list', 'scenario:item'])]
      #[Assert\Range(
         min: 0,
         max: 10000000,
@@ -133,6 +143,17 @@ class Scenario
     }
 
     public function setIncome(?string $income): static
+    {
+        $this->income = $income;
+
+        return $this;
+    }
+    public function getPostTaxIncome(): ?string
+    {
+        return $this->income;
+    }
+
+    public function setPostTaxIncome(?string $income): static
     {
         $this->income = $income;
 
