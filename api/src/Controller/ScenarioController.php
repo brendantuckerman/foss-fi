@@ -126,6 +126,14 @@ final class ScenarioController extends AbstractController
         $yearsToFi = $yearsToSuperTarget + $yearsPreSuperNper;
         $yearOfFi = ceil(date('Y') + $yearsToFi);
 
+        // Schedules
+        // Pre super
+        $preSuperSchedule = $compute->createPreSuperSchedule($yearsPreSuperNper, $annualSavings, $inflationAdjustedGrowth /100, $netWorth);
+
+
+
+        // Post super -not yet done
+
         return [
             'superPreservationAge' => $superPreservationAge,
             'yearsUntilPreservation' => $yearsUntilPreservation,
@@ -146,6 +154,7 @@ final class ScenarioController extends AbstractController
             'yearsToSuperTarget' => $yearsToSuperTarget,
             'yearsToFi' => $yearsToFi,
             'yearOfFi' => $yearOfFi,
+            'preSuperSchedule' => $preSuperSchedule
         ];
     }
 }

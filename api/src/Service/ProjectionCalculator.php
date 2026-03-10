@@ -385,17 +385,22 @@ class ProjectionCalculator
     // ### Schedule creations
     /**
      * NB: The loop of this function begins at to represent a payment period
+     * It is epxected that the adjustedInfaltion rate has alreaby been divided / 100
      */
     public function createPreSuperSchedule(float $yearsTilPreSuper, int $annualDepositAmount, float $adjustedInterestRate, float $netWorth): array
     {
         $schedule = [];
         $currentYear = (int) date('Y');
-
-        //For loop while i < $yearsTilPreSuper.
+        // 1st year is not a period
+        $schedule[0] = [
+            'year' => $currentYear,
+            'balance' => $netWorth
+        ];
+     
         // Each i is a period
         // Need to start at 1 to match years
         for ($i = 1; $i -1 < $yearsTilPreSuper; $i++ ) {
-            $interestMade = round($netWorth * ($adjustedInterestRate / 100), 0);
+            $interestMade = round($netWorth * ($adjustedInterestRate), 0);
             $savedSoFar = $annualDepositAmount + $interestMade;
             $netWorth += $savedSoFar;
 

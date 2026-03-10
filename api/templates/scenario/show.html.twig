@@ -40,6 +40,34 @@
         <li>Year you will hit preSuper: {{yearOfPreSuper}}</li>
     </ul>
 
+    <table>
+        <caption>
+        Schedule showing savings towards your pre-FIRE amount.
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Period</th>
+                <th scope="col">Year</th>
+                <th scope="col">Regular Deposit</th>
+                <th scope="col">Interest made</th>
+                <th scope="col">Combined annualsavings</th>
+                <th scope="col">Pre Fire Balance</th>
+            </tr>
+            {% for key, row in preSuperSchedule %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ row['year'] }}</td>
+                <td>{{ row['deposit'] ?? '' }}</td>
+                <td>{{ row['interestMade'] ?? '' }}</td>
+                <td>{{ row['savedSoFar'] ?? '' }}</td>
+                <td>{{ row['balance'] }}</td>
+            </tr>
+            {% endfor %}
+
+        </thead>
+
+    </table>
+
 
      <h2>Super </h2>
 
