@@ -3,6 +3,16 @@ import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
 import DashboardCard from './DashboardCard.vue'
 import { Icon } from '@iconify/vue'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 const inputsStore = useInputsStore()
 
@@ -117,6 +127,40 @@ console.log('Results', scenarioStore.calculations)
           >.
         </p>
       </DashboardCard>
+
+      <!-- Pre super savings schedule -->
+      <Table v-if="scenarioStore.calculations.preSuperSchedule">
+        <TableCaption>Schedule of savings towards your pre-FIRE amount.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[100px]"> Period </TableHead>
+            <TableHead>Year</TableHead>
+            <TableHead>Deposit</TableHead>
+            <TableHead>Interest</TableHead>
+            <TableHead>Saved so far</TableHead>
+            <TableHead class="text-right"> Balance </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="(row, key) in scenarioStore.calculations.preSuperSchedule" :key="key">
+            <TableCell class="font-medium">
+              {{ key }}
+            </TableCell>
+            <TableCell>{{ row.year }}</TableCell>
+            <TableCell>${{ row.deposit?.toLocaleString() ?? '0' }}</TableCell>
+            <TableCell>${{ row.interestMade?.toLocaleString() ?? '0' }}</TableCell>
+            <TableCell>${{ row.savedSoFar?.toLocaleString() ?? '0' }}</TableCell>
+            <TableCell class="text-right"> ${{ row.balance.toLocaleString() }} </TableCell>
+          </TableRow>
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colspan="6"> You will reach your pre-Super FIRE number in ... </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+
+      <!-- Pre super to zero schedule -->
 
       <hr />
     </section>
