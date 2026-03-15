@@ -201,6 +201,18 @@ console.log('Results', scenarioStore.calculations)
     <hr />
     <section class="foss-fi-dashboard__results-post-super">
       <h3 class="text-xl">Post super</h3>
+
+      <!-- Super target -->
+      <DashboardCard
+        v-if="scenarioStore.calculations.superTarget"
+        :title="`$${scenarioStore.calculations.superTarget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"
+        header-description="How much you need in Super at your preservation age to last you forever."
+      >
+      </DashboardCard>
+
+      <!-- Super Donut -->
+
+      <!-- Super years til you reach that amount -->
     </section>
   </div>
 </template>
