@@ -436,7 +436,7 @@ class ProjectionCalculator
             $schedule[] = [
                 'year' => $i,
                 'interestMade' => $interestMade,
-                'principal' => $principal,
+                'balance' => $principal,
             ];
 
         $principal = $principal - $annualExpenses + $interestMade;

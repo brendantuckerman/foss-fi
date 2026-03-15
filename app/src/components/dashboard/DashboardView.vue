@@ -13,6 +13,7 @@ const inputsStore = useInputsStore()
 const scenarioStore = useScenarioStore()
 
 // Pre super savings table variables
+// This could probably be recycled for the preSuperToZero chart
 const preSuperChartConfig = {
   options: {
     label: 'Savings Total',
@@ -47,10 +48,24 @@ const preSuperTableColumns = [
 ]
 
 const preSuperChartData = computed(() => scenarioStore.calculations?.preSuperSchedule ?? [])
-type Data = (typeof preSuperChartData.value)[number]
+
+const preSupertoZeroChartData = computed(
+  () => scenarioStore.calculations?.preSuperToZeroSchedule ?? [],
+)
 
 // Pre super to 0 variables
+const preSuperToZeroTableColumns = [
+  { label: 'Year', getValue: (row: unknown) => String((row as any).year) },
 
+  {
+    label: 'Interest Earned',
+    getValue: (row: unknown) => `$${(row as any).interestMade?.toLocaleString() ?? '0'}`,
+  },
+  {
+    label: 'Principal',
+    getValue: (row: unknown) => `$${(row as any).balance?.toLocaleString() ?? '0'}`,
+  },
+]
 // Debug results
 console.log('Results', scenarioStore.calculations)
 </script>
@@ -168,6 +183,13 @@ console.log('Results', scenarioStore.calculations)
       />
 
       <!-- Pre super to 0 -->
+      <DashboardTableChart
+        v-if="scenarioStore.calculations?.preSuperToZeroSchedule"
+        title="Schedule showing pre-super amount to zero."
+        :data="preSupertoZeroChartData"
+        :table-columns="preSuperToZeroTableColumns"
+        :chart-config="preSuperChartConfig"
+      />
     </section>
     <hr />
     <section class="foss-fi-dashboard__results-post-super">
