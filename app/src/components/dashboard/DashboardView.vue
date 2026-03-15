@@ -95,7 +95,7 @@ console.log('Results', scenarioStore.calculations)
         </p>
       </DashboardCard>
     </section>
-    <section class="foss-fi-dashboard__results-pre-super grid gap-4">
+    <section class="foss-fi-dashboard__results-pre-super flex flex-col gap-4">
       <h3 class="text-xl">Pre super</h3>
       <p>FIRE is broken into two phases- the pre super phase and the post super phase.</p>
       <!-- Super years -->
@@ -157,7 +157,6 @@ console.log('Results', scenarioStore.calculations)
       <!-- Pre super savings -->
       <DashboardTableChart
         v-if="scenarioStore.calculations?.preSuperSchedule"
-        :table-toggle="false"
         title="Pre-super savings over time"
         :data="preSuperChartData"
         :table-columns="preSuperTableColumns"
