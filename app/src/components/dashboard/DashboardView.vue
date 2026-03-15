@@ -144,7 +144,7 @@ console.log('Results', scenarioStore.calculations)
         :title="`${scenarioStore.calculations.savingsRate.toString()}%`"
         header-description="Your current savings rate."
       >
-        <p v-if="scenarioStore.calculations.yearOfFi">
+        <p v-if="scenarioStore.calculations.monthlyExpenses">
           You are spending
           <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl"
             >${{ scenarioStore.calculations.monthlyExpenses.toLocaleString() }}</span
@@ -169,6 +169,13 @@ console.log('Results', scenarioStore.calculations)
                 maximumFractionDigits: 2,
               })
             }}</span
+          >.
+        </p>
+        <p v-if="scenarioStore.calculations.yearOfPreSuper">
+          You will reach your pre-FIRE amount in
+          <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
+            scenarioStore.calculations.yearOfPreSuper
+          }}</span
           >.
         </p>
       </DashboardCard>

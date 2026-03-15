@@ -445,6 +445,23 @@ class ProjectionCalculator
         return $schedule;
     }
 
+    /**
+     * Creates a schedule to show the savings of Super pre FIRE, while making
+     * a regular deposti
+     */
 
+    public function createSuperDepositSchedule()
+    {
+        $schedule = [];
+    }
+
+    /**
+     * Creates a schedule to show the savings of Super post fire, where there
+     * are no deposits but only interest
+     */
+    public function createSuperInterestSchedule()
+    {
+        $schedule = [];
+    }
 
 }

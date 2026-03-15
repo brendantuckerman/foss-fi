@@ -7,13 +7,16 @@ const { width } = useWindowSize()
 // Form submission
 import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
+import { useUiStore } from '@/stores/ui'
 const store = useScenarioStore()
 const inputsStore = useInputsStore()
+const uiStore = useUiStore()
 
 interface FormData {
   label: string
   age: number
   income: number
+  postTaxIncome: number
   outgoings: number
   investmentAmount: number
   super: number
@@ -27,6 +30,7 @@ async function handleSubmit(data: FormData) {
   inputsStore.label = data.label
   inputsStore.age = data.age
   inputsStore.income = data.income
+  inputsStore.postTaxIncome = data.postTaxIncome
   inputsStore.outgoings = data.outgoings
   inputsStore.investmentAmount = data.investmentAmount
   inputsStore.currentSuper = data.super
@@ -36,6 +40,7 @@ async function handleSubmit(data: FormData) {
 
   await store.calculateScenario(data)
   console.log(store.calculations)
+  uiStore.sidebarOpen = false
 }
 </script>
 

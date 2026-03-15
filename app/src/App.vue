@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 
 import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
@@ -9,9 +8,10 @@ import ColorMode from './components/ColorMode.vue'
 import { useWindowSize } from '@vueuse/core'
 import DisclaimerBanner from './components/DisclaimerBanner.vue'
 import IconBranding from './components/icons/IconBranding.vue'
+import { useUiStore } from './stores/ui'
 
 const { width } = useWindowSize()
-const toggleState = ref(false)
+const uiStore = useUiStore()
 </script>
 
 <template>
@@ -46,7 +46,7 @@ const toggleState = ref(false)
   <main>
     <section
       :class="
-        toggleState
+        uiStore.sidebarOpen
           ? 'foss-fi-sidebar__section sidebar-open'
           : 'foss-fi-sidebar__section sidebar-closed'
       "
@@ -55,9 +55,9 @@ const toggleState = ref(false)
         role="button"
         class="foss-fi-sidebar__toggle"
         id="sidebar-toggle"
-        @click="toggleState = !toggleState"
+        @click="uiStore.toggleSidebar()"
       >
-        <span v-if="!toggleState" class="foss-fi-sidebar__toggle-span"
+        <span v-if="!uiStore.sidebarOpen" class="foss-fi-sidebar__toggle-span"
           ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />Enter
           details
         </span>
