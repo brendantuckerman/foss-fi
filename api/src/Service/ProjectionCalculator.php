@@ -396,7 +396,7 @@ class ProjectionCalculator
             'year' => $currentYear,
             'balance' => $netWorth
         ];
-     
+
         // Each i is a period
         // Need to start at 1 to match years
         for ($i = 1; $i -1 < $yearsTilPreSuper; $i++ ) {
@@ -432,14 +432,14 @@ class ProjectionCalculator
     {
         $schedule = [];
         for ($i = $initialYear; $principal > 0; $i++ ) {
-            $interestEarned = round($principal * $annualInterest, 0);
+            $interestMade = round($principal * $annualInterest, 0);
             $schedule[] = [
                 'year' => $i,
+                'interestMade' => $interestMade,
                 'principal' => $principal,
-                'interestEarned' => $interestEarned
             ];
 
-        $principal = $principal - $annualExpenses + $interestEarned;
+        $principal = $principal - $annualExpenses + $interestMade;
 
         }
         return $schedule;

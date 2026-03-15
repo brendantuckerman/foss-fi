@@ -63,10 +63,32 @@
                 <td>{{ row['balance'] }}</td>
             </tr>
             {% endfor %}
-
         </thead>
-
     </table>
+
+    <table>
+        <caption>
+        Schedule showing your pre-FIRE amount heading to zero.
+        </caption>
+        <thead>
+            <tr>
+
+                <th scope="col">Year</th>
+                <th scope="col">Interest earned</th>
+                <th scope="col">Principal</th>
+
+            </tr>
+            {% for key, row in preSuperToZeroSchedule %}
+            <tr>
+                <td>{{ row['year'] }}</td>
+                <td>{{ row['interestMade'] ?? '' }}</td>
+                <td>{{ row['principal'] }}</td>
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
+
+    preSuperToZeroSchedule
 
 
      <h2>Super </h2>

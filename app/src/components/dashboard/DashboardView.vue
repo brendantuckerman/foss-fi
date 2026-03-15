@@ -8,6 +8,11 @@ import { Icon } from '@iconify/vue'
 import type { ChartConfig } from '@/components/ui/chart'
 import DashboardTableChart from './DashboardTableChart.vue'
 
+// Pinia stores for form inputs and scenarioResults
+const inputsStore = useInputsStore()
+const scenarioStore = useScenarioStore()
+
+// Pre super savings table variables
 const preSuperChartConfig = {
   options: {
     label: 'Savings Total',
@@ -41,13 +46,12 @@ const preSuperTableColumns = [
   },
 ]
 
-const inputsStore = useInputsStore()
-
-const scenarioStore = useScenarioStore()
-
 const preSuperChartData = computed(() => scenarioStore.calculations?.preSuperSchedule ?? [])
 type Data = (typeof preSuperChartData.value)[number]
 
+// Pre super to 0 variables
+
+// Debug results
 console.log('Results', scenarioStore.calculations)
 </script>
 
@@ -157,13 +161,15 @@ console.log('Results', scenarioStore.calculations)
       <!-- Pre super savings -->
       <DashboardTableChart
         v-if="scenarioStore.calculations?.preSuperSchedule"
-        title="Pre-super savings over time"
+        title="Schedule showing savings towards your pre-FIRE amount."
         :data="preSuperChartData"
         :table-columns="preSuperTableColumns"
         :chart-config="preSuperChartConfig"
       />
-      <hr />
+
+      <!-- Pre super to 0 -->
     </section>
+    <hr />
     <section class="foss-fi-dashboard__results-post-super">
       <h3 class="text-xl">Post super</h3>
     </section>
