@@ -5,12 +5,10 @@ import SidebarWrapper from './components/sidebar/SidebarWrapper.vue'
 import { Icon } from '@iconify/vue'
 import ColorMode from './components/ColorMode.vue'
 
-import { useWindowSize } from '@vueuse/core'
 import DisclaimerBanner from './components/DisclaimerBanner.vue'
 import IconBranding from './components/icons/IconBranding.vue'
 import { useUiStore } from './stores/ui'
 
-const { width } = useWindowSize()
 const uiStore = useUiStore()
 </script>
 
@@ -18,7 +16,6 @@ const uiStore = useUiStore()
   <header>
     <div class="wrapper pl-8 pr-8">
       <div class="foss-fi-header__utilities-wrapper w-full text-right">
-        <a href="/">Log in or Sign up</a>
         <ColorMode />
       </div>
       <div class="foss-fi-header__branding text-center flex flex-col gap-2">
@@ -30,11 +27,6 @@ const uiStore = useUiStore()
           A <span class="italic">Financial Independence Retire Early </span> calculator for the
           Australian context.
         </p>
-        <p v-if="width < 860" class="text-sm flex">
-          <Icon icon="material-symbols:right-click" width="24" height="24" />Tap the tab on the left
-          to enter details.
-        </p>
-        <p v-else class="text-sm">Use the panel to the left to enter details.</p>
       </div>
 
       <nav>

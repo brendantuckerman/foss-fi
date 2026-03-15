@@ -4,9 +4,11 @@ import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
 import DashboardCard from './DashboardCard.vue'
 import { Icon } from '@iconify/vue'
-
+import { useWindowSize } from '@vueuse/core'
 import type { ChartConfig } from '@/components/ui/chart'
 import DashboardTableChart from './DashboardTableChart.vue'
+
+const { width } = useWindowSize()
 
 // Pinia stores for form inputs and scenarioResults
 const inputsStore = useInputsStore()
@@ -172,11 +174,11 @@ console.log('Results', scenarioStore.calculations)
           >.
         </p>
         <p v-if="scenarioStore.calculations.yearOfPreSuper">
-          You will reach your pre-FIRE amount in
+          In
           <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
             scenarioStore.calculations.yearOfPreSuper
           }}</span
-          >.
+          >, your pre-super savings will to live off until you superannuation preservation age.
         </p>
       </DashboardCard>
 
@@ -214,6 +216,13 @@ console.log('Results', scenarioStore.calculations)
 
       <!-- Super years til you reach that amount -->
     </section>
+  </div>
+  <div v-else class="h-20 my-0 mx-auto w-full pt-8">
+    <p v-if="width < 860" class="text-sm text-center flex">
+      <Icon icon="material-symbols:right-click" width="24" height="24" />Tap the tab on the left to
+      enter details. Your results wil appear here.
+    </p>
+    <p v-else class="text-sm">Use the panel to the left to enter details.</p>
   </div>
 </template>
 
