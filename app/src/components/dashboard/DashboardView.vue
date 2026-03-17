@@ -7,6 +7,7 @@ import { Icon } from '@iconify/vue'
 import { useWindowSize } from '@vueuse/core'
 import type { ChartConfig } from '@/components/ui/chart'
 import DashboardTableChart from './DashboardTableChart.vue'
+import DashboardDonut from './DashboardDonut.vue'
 
 const { width } = useWindowSize()
 
@@ -68,6 +69,12 @@ const preSuperToZeroTableColumns = [
     getValue: (row: unknown) => `$${(row as any).balance?.toLocaleString() ?? '0'}`,
   },
 ]
+
+// Data for super donut
+// All I should need to do here is pass in the two smaller values, and the larger
+// one as a title
+const donutData = [scenarioStore.calculations.superResult, scenarioStore.calculations.superNeeded]
+
 // Debug results
 console.log('Results', scenarioStore.calculations)
 </script>
@@ -213,7 +220,11 @@ console.log('Results', scenarioStore.calculations)
       </DashboardCard>
 
       <!-- Super Donut -->
-
+      <DashboardDonut
+        :v-if="scenarioStore.calculations.superRequiredForFi"
+        :title="scenarioStore.calculations.superRequiredForFi.toLocaleString()"
+        :data="donutData"
+      />
       <!-- Super years til you reach that amount -->
     </section>
   </div>
