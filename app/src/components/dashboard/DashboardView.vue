@@ -73,7 +73,11 @@ const preSuperToZeroTableColumns = [
 // Data for super donut
 // All I should need to do here is pass in the two smaller values, and the larger
 // one as a title
-const donutData = [scenarioStore.calculations.superResult, scenarioStore.calculations.superNeeded]
+
+const donutData = [
+  { label: 'Super so far', value: scenarioStore.calculations.superResult },
+  { label: 'Super remaining', value: scenarioStore.calculations.superNeeded },
+]
 
 // Debug results
 console.log('Results', scenarioStore.calculations)
