@@ -50,8 +50,8 @@ const uiStore = useUiStore()
         @click="uiStore.toggleSidebar()"
       >
         <span v-if="!uiStore.sidebarOpen" class="foss-fi-sidebar__toggle-span"
-          ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />Enter
-          details
+          ><Icon icon="material-symbols:arrow-circle-up-outline" width="24" height="24" />
+          Create new
         </span>
         <span v-else class="foss-fi-sidebar__toggle-span"
           ><Icon icon="material-symbols:close-rounded" width="24" height="24" />

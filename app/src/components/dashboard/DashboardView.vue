@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useScenarioStore } from '@/stores/scenario'
 import { useInputsStore } from '@/stores/inputs'
 import DashboardCard from './DashboardCard.vue'
 import { Icon } from '@iconify/vue'
-import { useWindowSize } from '@vueuse/core'
+import { useDebounceFn, useWindowSize } from '@vueuse/core'
 import type { ChartConfig } from '@/components/ui/chart'
 import DashboardTableChart from './DashboardTableChart.vue'
 import DashboardDonut from './DashboardDonut.vue'
+import { Slider } from '@/components/ui/slider'
 
 const { width } = useWindowSize()
 
@@ -71,14 +72,47 @@ const preSuperToZeroTableColumns = [
 ]
 
 // Data for super donut
-const superSoFarLabel = '$' + Math.floor(scenarioStore.calculations?.superResult).toLocaleString()
-const superRemainingLabel =
-  '$' + Math.floor(scenarioStore.calculations?.superNeeded).toLocaleString()
-
 const donutData = computed(() => [
-  { label: superSoFarLabel, value: scenarioStore.calculations?.superResult ?? 0 },
-  { label: superRemainingLabel, value: scenarioStore.calculations?.superNeeded ?? 0 },
+  {
+    label: '$' + Math.floor(scenarioStore.calculations?.superResult ?? 0).toLocaleString(),
+    value: scenarioStore.calculations?.superResult ?? 0,
+  },
+  {
+    label: '$' + Math.floor(scenarioStore.calculations?.superNeeded ?? 0).toLocaleString(),
+    value: scenarioStore.calculations?.superNeeded ?? 0,
+  },
 ])
+
+// Auto-recalculate when slider-controlled inputs change
+const recalculate = useDebounceFn(async () => {
+  if (!inputsStore.label) return
+  await scenarioStore.calculateScenario({
+    label: inputsStore.label!,
+    age: inputsStore.age!,
+    income: inputsStore.income!,
+    postTaxIncome: inputsStore.postTaxIncome!,
+    outgoings: inputsStore.outgoings!,
+    investmentAmount: inputsStore.investmentAmount!,
+    super: inputsStore.currentSuper!,
+    superGuarantee: inputsStore.superGuaranteee!,
+    returnRate: inputsStore.returnRate!,
+    inflationRate: inputsStore.inflationRate!,
+  })
+}, 400)
+
+watch(
+  () => [
+    inputsStore.income,
+    inputsStore.postTaxIncome,
+    inputsStore.outgoings,
+    inputsStore.investmentAmount,
+    inputsStore.currentSuper,
+    inputsStore.superGuaranteee,
+    inputsStore.returnRate,
+    inputsStore.inflationRate,
+  ],
+  recalculate,
+)
 
 // Data for post-super with contributions
 const postSuperContributionsData = computed(
@@ -129,25 +163,114 @@ console.log('Results', scenarioStore.calculations)
 </script>
 
 <template>
-  <section v-if="inputsStore.label">
-    <h1 class="text-3xl font-bold text-center">{{ inputsStore.label }}</h1>
-    <p class="text-xs">A FIRE Dashboard</p>
-    <p v-if="!inputsStore">
-      Use the tab to the left to enter your details. Your results will appear below
-    </p>
-    <h2 class="text-2xl">Your information</h2>
-    <ul>
-      <li>{{ inputsStore.age }}</li>
-      <li>{{ inputsStore.income }}</li>
-      <li>{{ inputsStore.outgoings }}</li>
-      <li>{{ inputsStore.investmentAmount }}</li>
-      <li>{{ inputsStore.currentSuper }}</li>
-      <li>{{ inputsStore.superGuaranteee }}</li>
-      <li>{{ inputsStore.returnRate }}</li>
-      <li>{{ inputsStore.inflationRate }}</li>
-    </ul>
+  <section v-if="inputsStore.label" class="pb-4">
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-center">{{ inputsStore.label }}</h1>
+      <p class="text-xs pb-4 text-muted-foreground">A FIRE Dashboard</p>
+    </div>
+    <hr />
+    <div class="px-2 flex flex-col gap-2">
+      <h2 class="text-2xl text-center">Your Information</h2>
+      <p class="text-sm font-medium">Age: {{ inputsStore.age }}</p>
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="text-sm font-medium"
+            >Pre-tax Income: ${{ inputsStore.income?.toLocaleString() }}</label
+          >
+          <Slider
+            :min="0"
+            :max="500000"
+            :step="1000"
+            :model-value="[inputsStore.income ?? 0]"
+            @update:model-value="(v) => (inputsStore.income = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Post-tax Income: ${{ inputsStore.postTaxIncome?.toLocaleString() }}</label
+          >
+          <Slider
+            :min="0"
+            :max="500000"
+            :step="1000"
+            :model-value="[inputsStore.postTaxIncome ?? 0]"
+            @update:model-value="(v) => (inputsStore.postTaxIncome = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Outgoings: ${{ inputsStore.outgoings?.toLocaleString() }}</label
+          >
+          <Slider
+            :min="0"
+            :max="200000"
+            :step="500"
+            :model-value="[inputsStore.outgoings ?? 0]"
+            @update:model-value="(v) => (inputsStore.outgoings = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Net Worth: ${{ inputsStore.investmentAmount?.toLocaleString() }}</label
+          >
+          <Slider
+            :min="0"
+            :max="2000000"
+            :step="1000"
+            :model-value="[inputsStore.investmentAmount ?? 0]"
+            @update:model-value="(v) => (inputsStore.investmentAmount = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Super Balance: ${{ inputsStore.currentSuper?.toLocaleString() }}</label
+          >
+          <Slider
+            :min="0"
+            :max="2000000"
+            :step="1000"
+            :model-value="[inputsStore.currentSuper ?? 0]"
+            @update:model-value="(v) => (inputsStore.currentSuper = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Super Guarantee: {{ inputsStore.superGuaranteee }}%</label
+          >
+          <Slider
+            :min="0"
+            :max="30"
+            :step="0.5"
+            :model-value="[inputsStore.superGuaranteee ?? 12]"
+            @update:model-value="(v) => (inputsStore.superGuaranteee = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium">Return Rate: {{ inputsStore.returnRate }}%</label>
+          <Slider
+            :min="0"
+            :max="20"
+            :step="0.25"
+            :model-value="[inputsStore.returnRate ?? 8]"
+            @update:model-value="(v) => (inputsStore.returnRate = v?.[0] ?? null)"
+          />
+        </div>
+        <div>
+          <label class="text-sm font-medium"
+            >Inflation Rate: {{ inputsStore.inflationRate }}%</label
+          >
+          <Slider
+            :min="0"
+            :max="15"
+            :step="0.25"
+            :model-value="[inputsStore.inflationRate ?? 3]"
+            @update:model-value="(v) => (inputsStore.inflationRate = v?.[0] ?? null)"
+          />
+        </div>
+      </div>
+    </div>
   </section>
-
+  <hr />
   <div v-if="scenarioStore.calculations" class="foss-fi-dashboard__results flex flex-col gap-4">
     <section class="foss-fi-dashboard__results-overall grid gap-4">
       <h2 class="text-2xl">Your results</h2>
