@@ -450,10 +450,54 @@ class ProjectionCalculator
      * a regular deposti
      */
 
-    public function createSuperDepositSchedule()
-    {
-        $schedule = [];
+    /**
+ * Creates a schedule showing super balance growth through regular contributions,
+ * until the balance reaches the self-sustaining amount (i.e. it will grow to
+ * the retirement target without further contributions).
+ *
+ * Concessional contributions are taxed at 15% before entering super.
+ * Non-concessional contributions (annualSavings) are not taxed further.
+ *
+ * @param int   $startingBalance       Current super balance.
+ * @param int   $selfSustainingBalance Balance at which super grows to target unaided.
+ * @param float $preTaxIncome          Annual pre-tax income.
+ * @param float $contributionRate      Concessional contribution rate (e.g. 0.115).
+ * @param float $annualSavings         Non-concessional annual contribution.
+ * @param float $adjustedGrowthRate    Inflation-adjusted growth rate (e.g. 0.04).
+ * @param int   $startYear             The year the schedule begins.
+ *
+ * @return array the schedule year on year.
+ */
+public function createSuperDepositSchedule(
+    int $startingBalance,
+    int $selfSustainingBalance,
+    float $preTaxIncome,
+    float $contributionRate,
+    float $annualSavings,
+    float $adjustedGrowthRate,
+    int $startYear
+): array {
+    $annualContribution = ($preTaxIncome * $contributionRate * 0.85) + $annualSavings;
+
+    $schedule = [];
+    $balance = $startingBalance;
+    $schedule[] = ['year' => $startYear, 'balance' => $balance];
+
+    for ($i = 1; $balance < $selfSustainingBalance; $i++) {
+        $interest = round($balance * $adjustedGrowthRate, 0);
+        $balance = round($balance + $interest + $annualContribution, 0);
+
+        $schedule[] = [
+            'period'             => $i,
+            'year'               => $startYear + $i,
+            'regularDeposit'     => $annualContribution,
+            'interestMade'       => $interest,
+            'balance'            => $balance,
+        ];
     }
+
+    return $schedule;
+}
 
     /**
      * Creates a schedule to show the savings of Super post fire, where there

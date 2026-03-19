@@ -132,7 +132,8 @@ final class ScenarioController extends AbstractController
         $preSuperToZeroSchedule = $compute->createPreSuperToZero($yearOfPresuper, $postPv, $outgoings, $inflationAdjustedGrowth / 100);
 
 
-        // Post super -not yet done
+        // Post super
+        $postSuperContributionPhase = $compute->createSuperDepositSchedule($superResult, $superRequiredForFi, $preTaxIncome, $superGuarantee / 100, $annualSavings, $inflationAdjustedGrowth / 100, $yearOfPresuper );
 
         return [
             'superPreservationAge' => $superPreservationAge,
@@ -155,7 +156,9 @@ final class ScenarioController extends AbstractController
             'yearsToFi' => $yearsToFi,
             'yearOfFi' => $yearOfFi,
             'preSuperSchedule' => $preSuperSchedule,
-            'preSuperToZeroSchedule' => $preSuperToZeroSchedule 
+            'preSuperToZeroSchedule' => $preSuperToZeroSchedule,
+            'postSuperContributionPhase' => $postSuperContributionPhase,
+
         ];
     }
 }

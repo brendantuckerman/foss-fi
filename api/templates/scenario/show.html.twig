@@ -102,3 +102,29 @@
         <li>How much more $ you need to put in before you FIRE {{superNeeded}} </li>
         <li>How long in years will it take you to get to your number factoring in your current net worth, inlfation rate and rate of return: {{yearsToSuperTarget}}</li>
     </ul>
+
+<table>
+        <caption>
+        Schedule showing savings towards your Self sustaining super amount.
+        This assumes that you throw all your savings in this period towards super,
+        along with your contribution. Tax is generally accounted for.
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Period</th>
+                <th scope="col">Year</th>
+                <th scope="col">Regular Deposit</th>
+                <th scope="col">Interest made</th>
+                <th scope="col">Balance</th>
+            </tr>
+            {% for key, row in postSuperContributionPhase %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ row['year'] }}</td>
+                <td>{{ row['regularDeposit'] ?? '' }}</td>
+                <td>{{ row['interestMade'] ?? '' }}</td>
+                <td>{{ row['balance'] }}</td>
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
