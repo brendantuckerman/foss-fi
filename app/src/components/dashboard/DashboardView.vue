@@ -74,10 +74,14 @@ const preSuperToZeroTableColumns = [
 // All I should need to do here is pass in the two smaller values, and the larger
 // one as a title
 
-const donutData = [
-  { label: 'Super so far', value: scenarioStore.calculations.superResult },
-  { label: 'Super remaining', value: scenarioStore.calculations.superNeeded },
-]
+const superSoFarLabel = '$' + Math.floor(scenarioStore.calculations?.superResult).toLocaleString()
+const superRemainingLabel =
+  '$' + Math.floor(scenarioStore.calculations?.superNeeded).toLocaleString()
+
+const donutData = computed(() => [
+  { label: superSoFarLabel, value: scenarioStore.calculations?.superResult ?? 0 },
+  { label: superRemainingLabel, value: scenarioStore.calculations?.superNeeded ?? 0 },
+])
 
 // Debug results
 console.log('Results', scenarioStore.calculations)
@@ -212,7 +216,7 @@ console.log('Results', scenarioStore.calculations)
       />
     </section>
     <hr />
-    <section class="foss-fi-dashboard__results-post-super">
+    <section class="foss-fi-dashboard__results-post-super flex flex-col gap-4">
       <h3 class="text-xl">Post super</h3>
 
       <!-- Super target -->
@@ -225,7 +229,7 @@ console.log('Results', scenarioStore.calculations)
 
       <!-- Super Donut -->
       <DashboardDonut
-        :v-if="scenarioStore.calculations.superRequiredForFi"
+        v-if="scenarioStore.calculations?.superRequiredForFi"
         :title="scenarioStore.calculations.superRequiredForFi.toLocaleString()"
         :data="donutData"
       />
