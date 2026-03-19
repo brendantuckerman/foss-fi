@@ -502,10 +502,30 @@ public function createSuperDepositSchedule(
     /**
      * Creates a schedule to show the savings of Super post fire, where there
      * are no deposits but only interest
+     *
+     * @param int $startYear - The year the schedule commences (end of depost phase)
+     * @param int $preservationYear - The year that super becomes available
+     * @param int $principal - The amount of super initially
+     * @param float $inflationAdjustedReturnRate  should be n / 100, where n > 1
+     *
      */
-    public function createSuperInterestSchedule()
+    public function createSuperInterestSchedule(int $startYear, int $preservationYear, int $principal, float $inflationAdjustedGrowthRate )
     {
         $schedule = [];
+        $balance = $principal;
+
+        for ($i=$startYear; $i < $preservationYear; $i++) {
+            $interestMade = round($balance * $inflationAdjustedGrowthRate, 0);
+            $balance = round($balance + $interestMade, 0);
+
+            $schedule[] = [
+                'year' => $i,
+                'interestEarned' => $interestMade,
+                'balance' => $balance
+            ];
+        }
+
+        return $schedule;
     }
 
 }

@@ -71,9 +71,6 @@ const preSuperToZeroTableColumns = [
 ]
 
 // Data for super donut
-// All I should need to do here is pass in the two smaller values, and the larger
-// one as a title
-
 const superSoFarLabel = '$' + Math.floor(scenarioStore.calculations?.superResult).toLocaleString()
 const superRemainingLabel =
   '$' + Math.floor(scenarioStore.calculations?.superNeeded).toLocaleString()
@@ -82,6 +79,50 @@ const donutData = computed(() => [
   { label: superSoFarLabel, value: scenarioStore.calculations?.superResult ?? 0 },
   { label: superRemainingLabel, value: scenarioStore.calculations?.superNeeded ?? 0 },
 ])
+
+// Data for post-super with contributions
+const postSuperContributionsData = computed(
+  () => scenarioStore.calculations?.postSuperContributionPhase ?? [],
+)
+// Post superwith contribution variables
+const postSuperContributionsColumns = [
+  { label: 'Year', getValue: (row: unknown) => String((row as any).year) },
+  { label: 'Annual Deposit', getValue: (row: unknown) => String((row as any).regularDeposit) },
+
+  {
+    label: 'Interest Earned',
+    getValue: (row: unknown) => `$${(row as any).interestMade?.toLocaleString() ?? '0'}`,
+  },
+  {
+    label: 'Principal',
+    getValue: (row: unknown) => `$${(row as any).balance?.toLocaleString() ?? '0'}`,
+  },
+]
+
+const postSuperChartConfig = {
+  options: {
+    label: 'Super Total',
+    color: 'var(--chart-3)',
+  },
+} satisfies ChartConfig
+
+// Post super post fire
+const postSuperInterestData = computed(
+  () => scenarioStore.calculations?.postSuperInterestPhase ?? [],
+)
+
+const postSuperInterestColumns = [
+  { label: 'Year', getValue: (row: unknown) => String((row as any).year) },
+
+  {
+    label: 'Interest Earned',
+    getValue: (row: unknown) => `$${(row as any).interestMade?.toLocaleString() ?? '0'}`,
+  },
+  {
+    label: 'Principal',
+    getValue: (row: unknown) => `$${(row as any).balance?.toLocaleString() ?? '0'}`,
+  },
+]
 
 // Debug results
 console.log('Results', scenarioStore.calculations)
@@ -233,7 +274,23 @@ console.log('Results', scenarioStore.calculations)
         :title="scenarioStore.calculations.superRequiredForFi.toLocaleString()"
         :data="donutData"
       />
-      <!-- Super years til you reach that amount -->
+
+      <!-- Super schedule with contributions -->
+      <DashboardTableChart
+        v-if="scenarioStore.calculations?.postSuperContributionPhase"
+        title="Schedule showing super amount AFTER reaching your pre-super number."
+        :data="postSuperContributionsData"
+        :table-columns="postSuperContributionsColumns"
+        :chart-config="postSuperChartConfig"
+      />
+      <!-- Super shcedule  post FIRE -->
+      <DashboardTableChart
+        v-if="scenarioStore.calculations?.postSuperInterestPhase"
+        title="Schedule showing super amount post-FIRE."
+        :data="postSuperInterestData"
+        :table-columns="postSuperInterestColumns"
+        :chart-config="postSuperChartConfig"
+      />
     </section>
   </div>
   <div v-else class="h-20 my-0 mx-auto w-full pt-8">

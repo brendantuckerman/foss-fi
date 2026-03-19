@@ -128,3 +128,24 @@
             {% endfor %}
         </thead>
     </table>
+
+
+    <table>
+        <caption>
+        Schedule showing super after contrubtutions (i.e. fire)
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Year</th>
+                <th scope="col">Interest made</th>
+                <th scope="col">Balance</th>
+            </tr>
+            {% for key, row in postSuperInterestPhase %}
+            <tr>
+                <td>{{ row['year'] }}</td>
+                <td>{{ row['interestEarned'] ?? '' }}</td>
+                <td>{{ row['balance'] }}</td>
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
