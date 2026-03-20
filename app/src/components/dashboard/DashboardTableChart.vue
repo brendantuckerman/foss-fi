@@ -117,3 +117,9 @@ const tickFormat = (d: number) => `$${d.toLocaleString()}`
     </ChartContainer>
   </Card>
 </template>
+
+<style scoped lang="css">
+.balance-column {
+  font-weight: 800;
+}
+</style>

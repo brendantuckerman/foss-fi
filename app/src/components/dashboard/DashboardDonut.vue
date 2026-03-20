@@ -49,7 +49,7 @@ const layers = [(d: { label: string; value: number }) => d.label]
       />
     </VisSingleContainer>
     <CardFooter>
-      <p>
+      <p class="relative top-[-100px]">
         <span class="font-bold donut-span">${{ title }}</span> is the amount needed in super so it
         will grow to your FI amount.
       </p>
@@ -61,10 +61,5 @@ const layers = [(d: { label: string; value: number }) => d.label]
 .donut-title,
 .donut-span {
   font-weight: 700;
-}
-[data-slot='card-footer'] {
-  position: absolute;
-  bottom: 6rem;
-  width: 18rem;
 }
 </style>

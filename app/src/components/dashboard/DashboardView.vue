@@ -42,7 +42,7 @@ const preSuperTableColumns = [
   {
     label: 'Balance',
     getValue: (row: unknown) => `$${(row as any).balance?.toLocaleString()}`,
-    class: 'text-right',
+    class: 'text-right balance-column',
   },
 ]
 
@@ -396,8 +396,10 @@ console.log('Results', scenarioStore.calculations)
     </section>
     <hr />
     <section class="foss-fi-dashboard__results-post-super flex flex-col gap-4">
-      <h3 class="text-xl">Post super</h3>
-
+      <h3 class="text-xl text-center">Phase 2: Focus on Super</h3>
+      <p class="text-xs pb-4 text-muted-foreground">
+        During the second phase, you can put all your savings towards super.
+      </p>
       <!-- Super target -->
       <DashboardCard
         v-if="scenarioStore.calculations.superTarget"
