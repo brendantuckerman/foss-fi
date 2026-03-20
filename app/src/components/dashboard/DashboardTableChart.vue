@@ -14,7 +14,13 @@ import { Card } from '@/components/ui/card'
 
 import type { ChartConfig } from '@/components/ui/chart'
 import { VisGroupedBar, VisAxis, VisXYContainer } from '@unovis/vue'
-import { ChartContainer, ChartCrosshair, ChartTooltipContent, componentToString } from '@/components/ui/chart'
+import {
+  ChartContainer,
+  ChartCrosshair,
+  ChartTooltip,
+  ChartTooltipContent,
+  componentToString,
+} from '@/components/ui/chart'
 import { ref } from 'vue'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -30,7 +36,7 @@ interface Column {
   class?: string
 }
 
-defineProps<{
+const props = defineProps<{
   title: string
   data: DataItem[]
   tableColumns: Column[]
@@ -41,7 +47,6 @@ defineProps<{
 const showChart = ref(true)
 // Set y axis to be $
 const tickFormat = (d: number) => `$${d.toLocaleString()}`
-
 </script>
 
 <template>
@@ -103,14 +108,12 @@ const tickFormat = (d: number) => `$${d.toLocaleString()}`
           :barPadding="0.1"
           :groupPadding="0.1"
         />
-        <ChartCrosshair :template="componentToString(chartConfig, ChartTooltipContent)" />
+        <ChartTooltip />
+        <ChartCrosshair
+          :template="componentToString(props.chartConfig, ChartTooltipContent)"
+          :color="['var(--color-balance)']"
+        />
       </VisXYContainer>
     </ChartContainer>
   </Card>
 </template>
-
-<style scoped lang="css">
-g.tick:nth-of-type(2) {
-  display: none;
-}
-</style>
