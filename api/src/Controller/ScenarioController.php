@@ -112,7 +112,7 @@ final class ScenarioController extends AbstractController
         $superSweetSpot = $compute->calculatePreSuperSweetSpot($outgoings, $yearsUntilPreservation, $inflationAdjustedGrowth / 100, $annualSavings, $netWorth);
         $postPv = $compute->calculatePresentValue($inflationAdjustedGrowth / 100, $superSweetSpot, -$outgoings, 0);
 
-        $remainingPreSuper = $currentPv - $postPv;
+        $remainingPreSuper = $currentPv - $netWorth;
         $yearsPreSuperNper = $compute->calculateNper($inflationAdjustedGrowth / 100, $annualSavings, $netWorth, -$postPv);
         $preservationPreSuperDifference = $compute->calculateDifferenceTillPreSuper($yearsPreSuperNper, $yearsUntilPreservation);
         $yearOfPresuper = date('Y') + ceil($yearsPreSuperNper);

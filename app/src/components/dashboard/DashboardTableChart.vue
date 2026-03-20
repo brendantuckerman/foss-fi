@@ -14,11 +14,15 @@ import { Card } from '@/components/ui/card'
 
 import type { ChartConfig } from '@/components/ui/chart'
 import { VisGroupedBar, VisAxis, VisXYContainer } from '@unovis/vue'
-import { ChartContainer } from '@/components/ui/chart'
-
+import { ChartContainer, ChartCrosshair, ChartTooltipContent, componentToString } from '@/components/ui/chart'
 import { ref } from 'vue'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+
+interface DataItem {
+  year: number
+  balance: number
+}
 
 interface Column {
   label: string
@@ -28,15 +32,16 @@ interface Column {
 
 defineProps<{
   title: string
-  data: Record<string | number, unknown>
+  data: DataItem[]
   tableColumns: Column[]
   tableFooter?: string
   chartConfig: ChartConfig
 }>()
 
-const showChart = ref(false)
+const showChart = ref(true)
+// Set y axis to be $
+const tickFormat = (d: number) => `$${d.toLocaleString()}`
 
-type Data = (typeof chartData.value)[number]
 </script>
 
 <template>
@@ -76,7 +81,8 @@ type Data = (typeof chartData.value)[number]
       <VisXYContainer :data="data">
         <VisAxis
           type="x"
-          :x="(d: Data) => d.year"
+          :tickTextHideOverlapping="true"
+          :x="(d: DataItem) => d.year"
           :tick-line="false"
           :domain-line="false"
           :grid-line="false"
@@ -84,22 +90,27 @@ type Data = (typeof chartData.value)[number]
         />
         <VisAxis
           type="y"
-          :y="(d: Data) => d.balance"
-          :tick-format="(d: number) => d.balance"
+          :y="(d: DataItem) => d.balance"
+          :tickFormat="tickFormat"
           :tick-line="true"
           :domain-line="false"
         />
         <VisGroupedBar
-          :x="(d: Data) => d.year"
-          :y="[(d: Data) => d.balance]"
-          :color="[chartConfig.options.color]"
+          :x="(d: DataItem) => d.year"
+          :y="[(d: DataItem) => d.balance]"
+          :color="['var(--color-balance)']"
           :rounded-corners="4"
           :barPadding="0.1"
           :groupPadding="0.1"
-          :data-step="0.1"
-          :groupWidth="10"
         />
+        <ChartCrosshair :template="componentToString(chartConfig, ChartTooltipContent)" />
       </VisXYContainer>
     </ChartContainer>
   </Card>
 </template>
+
+<style scoped lang="css">
+g.tick:nth-of-type(2) {
+  display: none;
+}
+</style>

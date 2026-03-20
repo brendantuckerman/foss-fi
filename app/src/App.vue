@@ -59,7 +59,7 @@ const uiStore = useUiStore()
       </div>
       <SidebarWrapper />
     </section>
-    <body class="foss-fi-dashboard border-1 p-2">
+    <body class="foss-fi-dashboard border-1 rounded p-2">
       <RouterView />
     </body>
   </main>
