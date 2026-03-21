@@ -166,9 +166,10 @@ console.log('Results', scenarioStore.calculations)
     <hr />
     <div class="p-2 flex flex-col gap-2">
       <h2 class="text-2xl font-bold text-center">Your Information</h2>
+       <p class="text-xs pb-4 text-muted-foreground">Adjust the sliders to see revised results.</p>
       <p class="text-sm font-medium">Age: {{ inputsStore.age }}</p>
       <div class="flex flex-col gap-4">
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Pre-tax Income: ${{ inputsStore.income?.toLocaleString() }}</label
           >
@@ -180,7 +181,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.income = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Post-tax Income: ${{ inputsStore.postTaxIncome?.toLocaleString() }}</label
           >
@@ -192,7 +193,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.postTaxIncome = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Outgoings: ${{ inputsStore.outgoings?.toLocaleString() }}</label
           >
@@ -204,7 +205,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.outgoings = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Net Worth: ${{ inputsStore.investmentAmount?.toLocaleString() }}</label
           >
@@ -216,7 +217,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.investmentAmount = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Super Balance: ${{ inputsStore.currentSuper?.toLocaleString() }}</label
           >
@@ -228,7 +229,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.currentSuper = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Super Guarantee: {{ inputsStore.superGuaranteee }}%</label
           >
@@ -240,7 +241,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.superGuaranteee = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium">Return Rate: {{ inputsStore.returnRate }}%</label>
           <Slider
             :min="0"
@@ -250,7 +251,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.returnRate = v?.[0] ?? null)"
           />
         </div>
-        <div>
+        <div class="foss_fi-toggle-slider-container -z-1">
           <label class="text-sm font-medium"
             >Inflation Rate: {{ inputsStore.inflationRate }}%</label
           >

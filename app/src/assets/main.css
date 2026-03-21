@@ -12,9 +12,6 @@
   font-weight: normal;
 }
 
-main {
-  padding: 2rem;
-}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

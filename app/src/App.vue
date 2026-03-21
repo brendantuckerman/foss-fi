@@ -15,8 +15,8 @@ const uiStore = useUiStore()
 </script>
 
 <template>
-  <header class="leading-normal max-h-screen lg:flex lg:place-items-center">
-    <div class="wrapper pl-8 pr-8 lg:flex lg:items-start lg:flex-wrap">
+  <header class="leading-normal max-h-screen md:items-center lg:flex lg:place-items-center">
+    <div class="wrapper pl-8 pr-8 lg:flex lg:flex-wrap lg:items-center lg:justify-center">
       <div class="foss-fi-header__utilities-wrapper w-full text-right">
         <ColorMode />
       </div>
@@ -32,18 +32,23 @@ const uiStore = useUiStore()
       </div>
 
       <nav
-        class="w-full text-xs text-center mt-8 lg:text-left lg:-ml-4 lg:text-base lg:py-4 lg:mt-4"
+        class="w-full text-xs text-center mt-8 lg:text-base lg:py-4 lg:mt-4"
       >
-        <RouterLink to="/" class="hover:cursor-pointer inline-block px-4">Dashboard</RouterLink>
+        <RouterLink to="/" class="hover:cursor-pointer hover:text-blue-800 inline-block px-4"
+          activeClass="border-b-4 border-slate-800 pb-2"
+          exactActiveClass="border-b-4 border-slate-800 pb-2"  
+        >Dashboard</RouterLink>
         <RouterLink
           to="/about"
-          class="hover:cursor-pointer inline-block px-4 border-l border-[var(--color-border)]"
+          class="hover:cursor-pointer hover:text-blue-800 a inline-block px-4 border-[var(--color-border)]"
+          activeClass="border-b-4 border-slate-800 pb-2"
+          exactActiveClass="border-b-4 border-slate-800 pb-2"  
           >About</RouterLink
         >
       </nav>
     </div>
   </header>
-  <main class="relative md:grid md:grid-cols-5">
+  <main class="relative p-8 md:grid md:grid-cols-5 md:gap-4 md:pl-0">
     <!-- Smal;l screen- toggle ope -->
     <aside
       v-if="width < 760"
@@ -76,10 +81,10 @@ const uiStore = useUiStore()
       <SidebarWrapper />
     </aside>
     <!-- Medium and above screens grid layout -->
-    <aside v-else :class="['bg-[var(--color-background-mute)] h-screen']">
+    <aside v-else :class="['bg-[var(--color-background-mute)] h-screen md:col-span-2']">
       <SidebarWrapper />
     </aside>
-    <section class="foss-fi-dashboard border-1 rounded p-2">
+    <section class="foss-fi-dashboard border-1 rounded p-2 md:col-span-3">
       <RouterView />
     </section>
   </main>

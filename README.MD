@@ -30,17 +30,24 @@ Back end - Symfony
 
 To start from scratch (build and install npm packages)
 
+Create a .env file 
+
 ```bash
 cd foss-fi/
 ./coldstart.sh
 ```
 
-To start everything:
+Or use the linux version
+
+To start everything in dev:
+
+
 
 ```bash
 cd foss-fi/
 ./pullstart.sh
 ```
+(mac)
 
 ## To build
 
