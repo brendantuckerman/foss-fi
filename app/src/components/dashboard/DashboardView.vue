@@ -163,13 +163,13 @@ console.log('Results', scenarioStore.calculations)
       <h1 class="text-3xl font-bold text-center">{{ inputsStore.label }}</h1>
       <p class="text-xs pb-4 text-muted-foreground">A FIRE Dashboard</p>
     </div>
-    <hr />
-    <div class="p-2 flex flex-col gap-2">
+    <hr v-if="scenarioStore.calculations"/>
+    <div class="p-2 flex flex-col gap-2 lg:mx-0 lg:my-auto lg:items-center w-full">
       <h2 class="text-2xl font-bold text-center">Your Information</h2>
        <p class="text-xs pb-4 text-muted-foreground">Adjust the sliders to see revised results.</p>
-      <p class="text-sm font-medium">Age: {{ inputsStore.age }}</p>
-      <div class="flex flex-col gap-4">
-        <div class="foss_fi-toggle-slider-container -z-1">
+       <p class="text-sm font-medium">Age: {{ inputsStore.age }}</p>
+       <div class="flex flex-col gap-4 lg:grid lg:grid-cols-4">
+        <div class="foss_fi-toggle-slider-container -z-1 ">
           <label class="text-sm font-medium"
             >Pre-tax Income: ${{ inputsStore.income?.toLocaleString() }}</label
           >
@@ -266,9 +266,9 @@ console.log('Results', scenarioStore.calculations)
       </div>
     </div>
   </section>
-  <hr />
+  <hr v-if="scenarioStore.calculations" />
   <div v-if="scenarioStore.calculations" class="foss-fi-dashboard__results p-2 flex flex-col gap-4">
-    <section class="foss-fi-dashboard__results-overall grid gap-4">
+    <section class="foss-fi-dashboard__results-overall grid gap-4 lg:flex lg:flex-col lg:items-center">
       <h2 class="text-2xl font-bold text-center">Your Results</h2>
       <!-- Total Results -->
       <DashboardCard
@@ -300,50 +300,53 @@ console.log('Results', scenarioStore.calculations)
         support you until you can access your super. The second phase is building your super.
       </p>
       <!-- Super years -->
-      <DashboardCard
-        v-if="scenarioStore.calculations.superPreservationAge"
-        :title="`${scenarioStore.calculations.superPreservationAge.toString()} / ${scenarioStore.calculations.yearsUntilPreservation.toString()}`"
-        header-description="Age you can access your superannuation / Years until you can access your superannuation  "
-      >
-        <div class="flex gap-2 items-center">
-          <Icon
-            icon="material-symbols:calendar-month-rounded"
-            width="24"
-            height="24"
-            style="color: var(--chart-1)"
-          />
-          <p v-if="scenarioStore.calculations.yearOfFi" class="text-sm">
-            This will be the year
-            <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
-              scenarioStore.calculations.preservationYear.toString()
-            }}</span>
-          </p>
-        </div>
-      </DashboardCard>
+      <div class="lg:grid lg:grid-cols-7 lg:gap-4">
+        <DashboardCard
+          v-if="scenarioStore.calculations.superPreservationAge"
+          :title="`${scenarioStore.calculations.superPreservationAge.toString()} / ${scenarioStore.calculations.yearsUntilPreservation.toString()}`"
+          header-description="Age you can access your superannuation / Years until you can access your superannuation."
+          class="lg:col-span-2"
+        >
+          <div class="flex gap-2 items-center">
+            <Icon
+              icon="material-symbols:calendar-month-rounded"
+              width="24"
+              height="24"
+              style="color: var(--chart-1)"
+            />
+            <p v-if="scenarioStore.calculations.yearOfFi" class="text-sm">
+              This will be the year
+              <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl">{{
+                scenarioStore.calculations.preservationYear.toString()
+              }}</span>
+            </p>
+          </div>
+        </DashboardCard>
 
-      <!-- Pre Super Expenses and Savings rate -->
+        <!-- Pre Super Expenses and Savings rate -->
 
-      <DashboardCard
-        v-if="scenarioStore.calculations.savingsRate"
-        :title="`${scenarioStore.calculations.savingsRate.toString()}%`"
-        header-description="Your current savings rate."
-      >
-        <div class="flex gap-2 items-center">
-          <Icon
-            icon="material-symbols:monetization-on"
-            width="24"
-            height="24"
-            style="color: var(--chart-5)"
-          />
-          <p v-if="scenarioStore.calculations.monthlyExpenses" class="text-sm">
-            You are spending
-            <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl"
-              >${{ scenarioStore.calculations.monthlyExpenses.toLocaleString() }}</span
-            >
-            per month.
-          </p>
-        </div>
-      </DashboardCard>
+        <DashboardCard
+          v-if="scenarioStore.calculations.savingsRate"
+          :title="`${scenarioStore.calculations.savingsRate.toString()}%`"
+          header-description="Your current savings rate."
+          class="lg:col-span-2"
+        >
+          <div class="flex gap-2 items-center">
+            <Icon
+              icon="material-symbols:monetization-on"
+              width="24"
+              height="24"
+              style="color: var(--chart-5)"
+            />
+            <p v-if="scenarioStore.calculations.monthlyExpenses" class="text-sm">
+              You are spending
+              <span class="foss-fi-dashboard__card-years-to-fi-span text-2xl"
+                >${{ scenarioStore.calculations.monthlyExpenses.toLocaleString() }}</span
+              >
+              per month.
+            </p>
+          </div>
+        </DashboardCard>
 
       <!-- Pre super $ -->
 
@@ -351,6 +354,7 @@ console.log('Results', scenarioStore.calculations)
         v-if="scenarioStore.calculations.postPv"
         :title="`$${scenarioStore.calculations.postPv.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"
         header-description="Investment target. Having this amount invested / saved will be enough to support you until your super preservation age."
+        class="lg:col-span-3"
       >
         <div class="flex gap-2 items-center">
           <Icon
@@ -384,6 +388,7 @@ console.log('Results', scenarioStore.calculations)
         :data="preSuperChartData"
         :table-columns="preSuperTableColumns"
         :chart-config="preSuperChartConfig"
+        class="lg:col-span-7 lg:max-w-full"
       />
 
       <!-- Pre super to 0 -->
@@ -393,45 +398,53 @@ console.log('Results', scenarioStore.calculations)
         :data="preSupertoZeroChartData"
         :table-columns="preSuperToZeroTableColumns"
         :chart-config="preSuperChartConfig"
+        class="lg:col-span-7 lg:max-w-full"
       />
+      </div>
     </section>
-    <hr />
+    <hr v-if="scenarioStore.calculations"/>
     <section class="foss-fi-dashboard__results-post-super flex flex-col gap-4">
       <h3 class="text-xl text-center">Phase 2: Focus on Super</h3>
-      <p class="text-xs pb-4 text-muted-foreground">
+      <p class="text-xs pb-4 text-muted-foreground text-center">
         During the second phase, you can put all your savings towards super.
       </p>
-      <!-- Super target -->
-      <DashboardCard
-        v-if="scenarioStore.calculations.superTarget"
-        :title="`$${scenarioStore.calculations.superTarget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"
-        header-description="How much you need in Super at your preservation age to last you forever."
-      >
-      </DashboardCard>
+      <div class="lg:grid lg:grid-cols-7 lg:gap-4">
+        <!-- Super target -->
+        <DashboardCard
+          v-if="scenarioStore.calculations.superTarget"
+          :title="`$${scenarioStore.calculations.superTarget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`"
+          header-description="How much you need in Super at your preservation age to last you forever."
+          class="lg:col-span-3"
+        >
+        </DashboardCard>
 
-      <!-- Super Donut -->
-      <DashboardDonut
-        v-if="scenarioStore.calculations?.superRequiredForFi"
-        :title="scenarioStore.calculations.superRequiredForFi.toLocaleString()"
-        :data="donutData"
-      />
+        <!-- Super Donut -->
+        <DashboardDonut
+          v-if="scenarioStore.calculations?.superRequiredForFi"
+          :title="scenarioStore.calculations.superRequiredForFi.toLocaleString()"
+          :data="donutData"
+          class="lg:col-span-4"
+        />
 
-      <!-- Super schedule with contributions -->
-      <DashboardTableChart
-        v-if="scenarioStore.calculations?.postSuperContributionPhase"
-        title="Schedule showing super amount AFTER reaching your pre-super number."
-        :data="postSuperContributionsData"
-        :table-columns="postSuperContributionsColumns"
-        :chart-config="postSuperChartConfig"
-      />
-      <!-- Super shcedule  post FIRE -->
-      <DashboardTableChart
-        v-if="scenarioStore.calculations?.postSuperInterestPhase"
-        title="Schedule showing super amount post-FIRE."
-        :data="postSuperInterestData"
-        :table-columns="postSuperInterestColumns"
-        :chart-config="postSuperChartConfig"
-      />
+        <!-- Super schedule with contributions -->
+        <DashboardTableChart
+          v-if="scenarioStore.calculations?.postSuperContributionPhase"
+          title="Schedule showing super amount AFTER reaching your pre-super number."
+          :data="postSuperContributionsData"
+          :table-columns="postSuperContributionsColumns"
+          :chart-config="postSuperChartConfig"
+          class="lg:max-w-full lg:col-span-7"
+        />
+        <!-- Super shcedule  post FIRE -->
+        <DashboardTableChart
+          v-if="scenarioStore.calculations?.postSuperInterestPhase"
+          title="Schedule showing super amount post-FIRE."
+          :data="postSuperInterestData"
+          :table-columns="postSuperInterestColumns"
+          :chart-config="postSuperChartConfig"
+          class="lg:max-w-full lg:col-span-7"
+        />
+      </div>
     </section>
   </div>
   <div v-else class="h-20 my-0 mx-auto w-full pt-8">
@@ -439,7 +452,7 @@ console.log('Results', scenarioStore.calculations)
       <Icon icon="material-symbols:right-click" width="24" height="24" />Tap the tab on the left to
       enter details. Your results wil appear here.
     </p>
-    <p v-else class="text-sm">Use the panel to the left to enter details.</p>
+    <p v-else class="text-xl text-center">Use the panel to the left to enter your details.Your results wil appear here.</p>
   </div>
 </template>
 

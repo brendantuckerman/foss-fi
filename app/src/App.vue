@@ -16,7 +16,7 @@ const uiStore = useUiStore()
 
 <template>
   <header class="leading-normal max-h-screen md:items-center lg:flex lg:place-items-center">
-    <div class="wrapper pl-8 pr-8 lg:flex lg:flex-wrap lg:items-center lg:justify-center">
+    <div class="wrapper pl-8 pr-8 lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:w-full">
       <div class="foss-fi-header__utilities-wrapper w-full text-right">
         <ColorMode />
       </div>
@@ -48,12 +48,12 @@ const uiStore = useUiStore()
       </nav>
     </div>
   </header>
-  <main class="relative p-8 md:grid md:grid-cols-5 md:gap-4 md:pl-0">
-    <!-- Smal;l screen- toggle ope -->
+  <main class="relative p-8 md:grid md:grid-cols-5 md:gap-4 md:pl-0 lg:grid-cols-7">
+    <!-- Smal;l screen- toggle open -->
     <aside
       v-if="width < 760"
       :class="[
-        'bg-[var(--color-background-mute)] h-screen absolute w-[90vw] transition-[left] duration-300 ease-in-out pb-16',
+        'bg-[var(--color-background-mute)] h-screen absolute w-[90vw] transition-[left] duration-300 ease-in-out pb-16 rounded',
         uiStore.sidebarOpen ? 'left-0 overflow-scroll' : '-left-[90vw]',
       ]"
     >
@@ -81,10 +81,10 @@ const uiStore = useUiStore()
       <SidebarWrapper />
     </aside>
     <!-- Medium and above screens grid layout -->
-    <aside v-else :class="['bg-[var(--color-background-mute)] h-screen md:col-span-2']">
+    <aside v-else :class="['bg-[var(--color-background-mute)] h-screen md:col-span-2 rounded']">
       <SidebarWrapper />
     </aside>
-    <section class="foss-fi-dashboard border-1 rounded p-2 md:col-span-3">
+    <section class="foss-fi-dashboard border-1 rounded p-2 md:col-span-3 lg:col-span-5">
       <RouterView />
     </section>
   </main>
