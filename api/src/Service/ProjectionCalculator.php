@@ -345,7 +345,7 @@ class ProjectionCalculator
 
         // $results = [];
         //i is the number of periods and will be returned
-        $result = 0;
+        $result = $yearsTillPreservation;
 
         for ($i = 0; $subTotal > 0; $i++) {
             $result = $i;

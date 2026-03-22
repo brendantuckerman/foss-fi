@@ -161,6 +161,17 @@ class ProjectionCalculatorTest extends TestCase
         $this->assertSame($result_2, 114456);
     }
 
+    public function testCalculatePreSuperSavingsReducesWithHigherNetWorth(): void
+    {
+        $calculator = new ProjectionCalculator();
+        $pvAmount = 614456.71;
+
+        $result_base = $calculator->calculatePreSuperSavings(500000, $pvAmount);
+        $result_higher_net_worth = $calculator->calculatePreSuperSavings(600000, $pvAmount);
+
+        $this->assertLessThan($result_base, $result_higher_net_worth);
+    }
+
      public function testCalculateNper(): void
     {
         $calculator = new ProjectionCalculator();
@@ -262,7 +273,7 @@ class ProjectionCalculatorTest extends TestCase
         //Set up vars
         $r1_yearsTilPreSuper = 5.4;
         $r1_annualDepositAmount = 55000;
-        $r1_interestRate = 5.00;
+        $r1_interestRate = 5.00 / 100;
         $r1_netWorth = 100000;
         $r1_preSuperTarget = 462008;
 
@@ -306,12 +317,12 @@ class ProjectionCalculatorTest extends TestCase
         $this->assertArrayNotHasKey('9', $result_1);
         //Check first and last
         $this->assertEquals($result_1[0]['year'], 2031);
-        $this->assertEquals($result_1[0]['principal'], $r1_principal);
-        $this->assertEquals($result_1[0]['interestEarned'], 23100);
+        $this->assertEquals($result_1[0]['balance'], $r1_principal);
+        $this->assertEquals($result_1[0]['interestMade'], 23100);
         // Last
         $this->assertEquals($result_1[8]['year'], 2039);
-        $this->assertEquals($result_1[8]['principal'], 61904);
-        $this->assertEquals($result_1[8]['interestEarned'], 3095 );
+        $this->assertEquals($result_1[8]['balance'], 61904);
+        $this->assertEquals($result_1[8]['interestMade'], 3095 );
 
     }
 

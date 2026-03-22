@@ -34,7 +34,7 @@ const layers = [(d: { label: string; value: number }) => d.label]
   <Card>
     <CardHeader>
       <CardTitle
-        ><h3 class="text-lg donut-title">Super Saved So Far vs. Super Required</h3></CardTitle
+        ><h3 class="text-lg donut-title">Super you will have saved at the end of phase one vs Super Required</h3></CardTitle
       >
     </CardHeader>
     <VisSingleContainer :data="data">

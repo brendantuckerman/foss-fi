@@ -193,7 +193,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.postTaxIncome = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium"
             >Outgoings: ${{ inputsStore.outgoings?.toLocaleString() }}</label
           >
@@ -205,7 +205,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.outgoings = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium"
             >Net Worth: ${{ inputsStore.investmentAmount?.toLocaleString() }}</label
           >
@@ -217,7 +217,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.investmentAmount = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium"
             >Super Balance: ${{ inputsStore.currentSuper?.toLocaleString() }}</label
           >
@@ -229,7 +229,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.currentSuper = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium"
             >Super Guarantee: {{ inputsStore.superGuaranteee }}%</label
           >
@@ -241,7 +241,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.superGuaranteee = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium">Return Rate: {{ inputsStore.returnRate }}%</label>
           <Slider
             :min="0"
@@ -251,7 +251,7 @@ console.log('Results', scenarioStore.calculations)
             @update:model-value="(v) => (inputsStore.returnRate = v?.[0] ?? null)"
           />
         </div>
-        <div class="foss_fi-toggle-slider-container -z-1">
+        <div class="foss_fi-toggle-slider-container -z-1 md:z-1">
           <label class="text-sm font-medium"
             >Inflation Rate: {{ inputsStore.inflationRate }}%</label
           >
